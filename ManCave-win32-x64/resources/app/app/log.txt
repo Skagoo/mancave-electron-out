@@ -1,6 +1,3 @@
-2018-10-13 13:03:50:742|info|Running in production
-2018-10-13 13:03:50:786|info|App ready
-2018-10-13 13:03:50:805|info|registration failed ( Shift+`)
-2018-10-13 13:03:50:806|info|registration failed ( CommandOrControl+Shift+`)
-2018-10-13 13:03:50:807|info|registration failed ( CommandOrControl+Shift+I)
-2018-10-13 13:03:51:395|info|C:\Users\Sacha\AppData\Roaming\ManCave\Settings
+2018-10-13 13:28:31:991|info|Running in production
+2018-10-13 13:28:32:038|info|App ready
+2018-10-13 13:28:32:889|info|C:\Users\Sacha\AppData\Roaming\ManCave\Settings

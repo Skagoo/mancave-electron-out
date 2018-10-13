@@ -1,4 +1,5 @@
 const electron = require('electron');
+let settings = require('./js/settings.js');
 
 (function ($) {
     /*==================================================================
@@ -47,12 +48,12 @@ const electron = require('electron');
                 defaultChannelPassword = '';
             }
 
-            connectionHostname_value.set(hostname);
-            connectionPort_value.set(parseInt(port));
-            connectionNickname_value.set(nickname);
-            connectionDefaultChannel_value.set(defaultChannel);
-            connectionDefaultChannelPassword_value.set(defaultChannelPassword);
-            connectionServerPassword_value.set(serverPassword);
+            settings.connectionHostname_value.set(hostname);
+            settings.connectionPort_value.set(parseInt(port));
+            settings.connectionNickname_value.set(nickname);
+            settings.connectionDefaultChannel_value.set(defaultChannel);
+            settings.connectionDefaultChannelPassword_value.set(defaultChannelPassword);
+            settings.connectionServerPassword_value.set(serverPassword);
 
             let window = remote.getCurrentWindow();
             window.close();

@@ -436,6 +436,8 @@ function connect(channel) {
 			// and load the connect.html of the app.
 			connectWin.loadFile('app/connect.html')
 
+			connectWin.webContents.openDevTools();
+
 			// Emitted when the window is closed.
 			connectWin.on('closed', () => {
 				// Dereference the window object, usually you would store windows
