@@ -28,15 +28,8 @@ log.transports.file.file = __dirname + '/log.txt';
 // https://nodejs.org/api/fs.html#fs_fs_createwritestream_path_options
 log.transports.file.streamConfig = { flags: 'w' };
 
-// set existed file stream
-log.transports.file.stream = fs.createWriteStream('log.txt');
-
-
-
 const electronSettings = require('electron-settings');
 const settingsPath = app.getPath('userData') + '\\Settings';
-
-console.log(settingsPath);
 
 electronSettings.setPath(settingsPath);
 
@@ -102,7 +95,7 @@ function createMainWindow () {
   mainWin.loadFile('app/index.html')
 
   // Open the DevTools.
-  mainWin.webContents.openDevTools();
+  // mainWin.webContents.openDevTools();
   // win.webContents.on("devtools-opened", () => {
   //   win.webContents.closeDevTools();
   // }); 
