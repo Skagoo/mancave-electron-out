@@ -1,7 +1,20 @@
-import getPath from 'platform-folders';
-
+const remote = require('electron');
 const electronSettings = require('electron-settings');
-electronSettings.setPath(getPath('userData') + '\\..\\Local\\ManCave\\settings.json');
+
+// ============================================================
+// ========================== SETUP ===========================
+// ============================================================
+let settingsPath;
+var settingsPath_value = {
+    get: function() {
+        return settingsPath;
+    },
+    set: function(val) {
+        // Save the value
+        settingsPath = val;
+        electronSettings.setPath(settingsPath);
+    }
+}
 
 // ============================================================
 // ========================== KEYS ============================
@@ -360,6 +373,7 @@ var hotkeyOpenDevTools_value = {
 
 // Export values
 module.exports = {
+    settingsPath_value: settingsPath_value,
     connectionIdentity_value : connectionIdentity_value,
     connectionHostname_value : connectionHostname_value,
     connectionPort_value : connectionPort_value,

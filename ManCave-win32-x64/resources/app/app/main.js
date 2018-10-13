@@ -8,73 +8,6 @@ let settings = require('./js/settings.js');
 
 let log = require('electron-log');
 
-// this should be placed at top of main.js to handle setup events quickly
-if (handleSquirrelEvent()) {
-  // squirrel event handled and app will exit in 1000ms, so don't do anything else
-}
-
-function handleSquirrelEvent() {
-  if (process.argv.length === 1) {
-    return false;
-  }
-
-  const ChildProcess = require('child_process');
-  const path = require('path');
-
-  const appFolder = path.resolve(process.execPath, '..');
-  const rootAtomFolder = path.resolve(appFolder, '..');
-  const updateDotExe = path.resolve(path.join(rootAtomFolder, 'Update.exe'));
-  const exeName = path.basename(process.execPath);
-
-  const spawn = function(command, args) {
-    let spawnedProcess, error;
-
-    try {
-      spawnedProcess = ChildProcess.spawn(command, args, {detached: true});
-    } catch (error) {}
-
-    return spawnedProcess;
-  };
-
-  const spawnUpdate = function(args) {
-    return spawn(updateDotExe, args);
-  };
-
-  const squirrelEvent = process.argv[1];
-  switch (squirrelEvent) {
-    case '--squirrel-install':
-    case '--squirrel-updated':
-      // Optionally do things such as:
-      // - Add your .exe to the PATH
-      // - Write to the registry for things like file associations and
-      //   explorer context menus
-
-      // Install desktop and start menu shortcuts
-      spawnUpdate(['--createShortcut', exeName]);
-
-      setTimeout(app.quit, 1000);
-      return true;
-
-    case '--squirrel-uninstall':
-      // Undo anything you did in the --squirrel-install and
-      // --squirrel-updated handlers
-
-      // Remove desktop and start menu shortcuts
-      spawnUpdate(['--removeShortcut', exeName]);
-
-      setTimeout(app.quit, 1000);
-      return true;
-
-    case '--squirrel-obsolete':
-      // This is called on the outgoing version of your app before
-      // we update to the new version - it's the opposite of
-      // --squirrel-updated
-
-      app.quit();
-      return true;
-  }
-};
-
 // Logging
 // Log level
 log.transports.console.level = 'info';
@@ -100,12 +33,17 @@ log.transports.file.stream = fs.createWriteStream('log.txt');
 
 
 
-import getPath from 'platform-folders';
 const electronSettings = require('electron-settings');
-electronSettings.setPath(getPath('userData') + '\\..\\Local\\ManCave\\settings.json');
+const settingsPath = app.getPath('userData') + '\\Settings';
+
+console.log(settingsPath);
+
+electronSettings.setPath(settingsPath);
+
+settings.settingsPath_value.set(settingsPath);
 
 // Check if settings file exists, else create it
-var settingsFile = getPath('userData') + '\\..\\Local\\ManCave\\settings.json';
+var settingsFile = settingsPath;
 
 if (!fs.existsSync(settingsFile)) {
   fse.outputFileSync(settingsFile, '{}');
@@ -119,6 +57,7 @@ let mainWin;
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
 app.on('ready', () => {
+  log.info('App ready');
   // Create the main window
   createMainWindow();
 
@@ -163,7 +102,7 @@ function createMainWindow () {
   mainWin.loadFile('app/index.html')
 
   // Open the DevTools.
-  // mainWin.webContents.openDevTools();
+  mainWin.webContents.openDevTools();
   // win.webContents.on("devtools-opened", () => {
   //   win.webContents.closeDevTools();
   // }); 
@@ -181,6 +120,7 @@ function createMainWindow () {
   // or elements loading in visually.
   mainWin.on('ready-to-show', () => {
     var settingsHostname = 'connection.hostname';
+    log.info(settingsFile);
     if (electronSettings.has(settingsHostname)) {
       mainWin.show();
     }

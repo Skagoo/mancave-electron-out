@@ -113,7 +113,8 @@ $RECYCLE.BIN/
 # End of https://www.gitignore.io/api/node,windows,visualstudiocode
 
 # distribution files
-out/make
+out/
+ManCave-win32-x64/
 
 # couchdb
 couchdb.js
