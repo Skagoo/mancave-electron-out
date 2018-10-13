@@ -11,8 +11,10 @@ if not exist "%USERPROFILE%\Documents\ManCave\" (
 ) else (
 	cd "%USERPROFILE%\Documents\ManCave"
 	if not exist "C:\Program Files\Git\cmd\" (
+		"E:\Program Files (x86)\Git\cmd\git.exe" checkout .
 		"E:\Program Files (x86)\Git\cmd\git.exe" pull
 	) else (
+		"C:\Program Files\Git\cmd\git.exe" checkout .
 		"C:\Program Files\Git\cmd\git.exe" pull
 	)
 )

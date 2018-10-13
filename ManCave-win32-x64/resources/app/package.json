@@ -1,7 +1,7 @@
 {
   "name": "mancave-electron",
   "productName": "ManCave",
-  "version": "1.1.1",
+  "version": "1.2.0",
   "description": "VOIP client",
   "main": "app/main.js",
   "scripts": {
