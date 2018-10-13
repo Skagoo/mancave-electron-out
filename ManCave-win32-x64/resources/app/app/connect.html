@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<title>Connect</title>
+	<meta charset="UTF-8">
+
+	<link rel='stylesheet' href='http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css'>
+	<link rel='stylesheet' href='https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css'>
+	<link rel="stylesheet" href="http://cdn.arshen.ir/micon/2.2.155/dist/micon/css/micon.min.css">
+	<link rel='stylesheet' href='https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css'>
+
+	<link rel="stylesheet" type="text/css" href="css/style.css">
+	<link rel="stylesheet" type="text/css" href="css/connect.css">
+</head>
+
+<body>
+	<div class="wrap-login100">
+		<section class="header">
+			<div class="user">
+
+				<div class="user__inbox">
+
+					<i class="mi mi-ChromeClose" id="close-button"></i>
+
+				</div>
+
+			</div>
+
+		</section>
+
+
+		<div class="login100-form validate-form">
+			<span class="login100-form-title">
+				ManCave
+			</span>
+
+			<div class="wrap-input100 rs1-wrap-input100 validate-input" data-validate="Type hostname or ip">
+				<input id="hostname" class="input100" type="text" name="hostname" placeholder="hostname:port">
+				<span class="focus-input100"></span>
+			</div>
+			<div class="wrap-input100 rs2-wrap-input100 validate-input" data-validate="Type server password">
+				<input class="input100" type="password" name="serverPassword" placeholder="Server password">
+				<span class="focus-input100"></span>
+			</div>
+
+			<div class="wrap-input100 rs1-wrap-input100 validate-input" data-validate="Type username">
+				<input id="username" class="input100" type="text" name="nickname" placeholder="Username">
+				<span class="focus-input100"></span>
+			</div>
+			<div class="wrap-input100 rs2-wrap-input100" style="visibility: hidden;">
+				<input class="input100" type="text" name="placeholder" placeholder="placeholder">
+				<span class="focus-input100"></span>
+			</div>
+
+			<div class="wrap-input100 rs1-wrap-input100">
+				<input id="default-channel" class="input100" type="text" name="defaultChannel" placeholder="Default channel">
+				<span class="focus-input100"></span>
+			</div>
+			<div class="wrap-input100 rs2-wrap-input100">
+				<input class="input100" type="password" name="defaultChannelPassword" placeholder="Channel password">
+				<span class="focus-input100"></span>
+			</div>
+
+			<div class="container-login100-form-btn">
+				<button class="login100-form-btn">
+					Connect
+				</button>
+			</div>
+		</div>
+	</div>
+
+	<!-- Insert this line above script imports  -->
+	<script>
+		if (typeof module === 'object') {
+			window.module = module;
+			module = undefined;
+		}
+	</script>
+
+	<!-- normal script imports etc  -->
+	<script type="text/javascript" src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+	<script type="text/javascript" src='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js'></script>
+
+	<script type='text/javascript' src='js/settings.js'></script>
+	<script type='text/javascript' src='js/connect-renderer.js'></script>
+	<script src="js/connect.js"></script>
+
+	<!-- Insert this line after script imports -->
+	<script>
+		if (window.module) module = window.module;
+	</script>
+
+</body>
+
+</html>
