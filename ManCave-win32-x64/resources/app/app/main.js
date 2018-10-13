@@ -1,4 +1,4 @@
-const {app, BrowserWindow, globalShortcut} = require('electron');
+const {app, BrowserWindow, globalShortcut, Tray} = require('electron');
 const fs = require('fs');
 const fse = require('fs-extra');
 

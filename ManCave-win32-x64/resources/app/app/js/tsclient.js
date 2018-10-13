@@ -29,6 +29,11 @@ var testConnectionInterval;
 
 let ImgFormats = ['jpg', 'png', 'bmp', 'jpeg', 'jif', 'jiff'];
 
+const Tray = remote.Tray;
+let tray = new Tray(__dirname + `\\img\\tray\\icon.ico`);
+tray.setToolTip('ManCave by Skagoo');
+
+
 // ============================================================
 // ======================== CALLBACKS =========================
 // ============================================================
@@ -299,17 +304,32 @@ ts3client.on('onClientMoveSubscriptionEvent', function (schID, clientID, oldChan
  * a client starts/stops talking.
  */
 ts3client.on('onTalkStatusChangeEvent', function (schID, status, isWhisper, clientID) {
-	ts3client.logMessage('Client (id:' + clientID + ') ' + (status ? 'started' : 'stopped') + ' talking', ts3client.LogLevel.INFO);
+	try {
+		ts3client.logMessage('Client (id:' + clientID + ') ' + (status ? 'started' : 'stopped') + ' talking', ts3client.LogLevel.INFO);
 
-	// Get the clients nickname
-	var clientName = ts3client.getClientVariableAsString(schID, clientID, ts3client.ClientProperties.NICKNAME);
-	var isTalking = (status == ts3client.TalkStatus.TALKING);
+		// Get the clients nickname
+		var clientName = ts3client.getClientVariableAsString(schID, clientID, ts3client.ClientProperties.NICKNAME);
+		var isTalking = (status == ts3client.TalkStatus.TALKING);
 
-	// Get mute status
-	var isInputMuted = (ts3client.getClientVariableAsString(schID, clientID, ts3client.ClientProperties.INPUT_MUTED) == ts3client.MuteInputStatus.MUTED);
-	var isOutputMuted = (ts3client.getClientVariableAsString(schID, clientID, ts3client.ClientProperties.OUTPUT_MUTED) == ts3client.MuteOutputStatus.MUTED);
-	// Update the clients status indicator
-	channelNav_UpdateClientIndicator(clientID, clientName, isTalking, isWhisper, isInputMuted, isOutputMuted);
+		// Get mute status
+		var isInputMuted = (ts3client.getClientVariableAsString(schID, clientID, ts3client.ClientProperties.INPUT_MUTED) == ts3client.MuteInputStatus.MUTED);
+		var isOutputMuted = (ts3client.getClientVariableAsString(schID, clientID, ts3client.ClientProperties.OUTPUT_MUTED) == ts3client.MuteOutputStatus.MUTED);
+		// Update the clients status indicator
+		channelNav_UpdateClientIndicator(clientID, clientName, isTalking, isWhisper, isInputMuted, isOutputMuted);
+
+		// If self, update tray icon
+		if (clientID == selfClientID) {
+			if (isTalking) {
+				tray.setImage(__dirname + `\\img\\tray\\talking.ico`);
+			}
+			else {
+				tray.setImage(__dirname + `\\img\\tray\\icon.ico`);
+			}
+			
+		}
+	} catch (error) {
+		// Do nothing, client disconnected while talking
+	}
 });
 
 /**
@@ -821,6 +841,16 @@ function toggleMuteOutput () {
 		// Add the new class
 		iconElem.addClass('ion-android-volume-up');
 
+		// Check if output is muted, if it is no need to update icon
+		if (ts3client.getClientVariableAsString(schID, selfClientID, ts3client.ClientProperties.INPUT_MUTED) == ts3client.MuteInputStatus.MUTED) {
+			// Update the tray icon
+			tray.setImage(__dirname + `\\img\\tray\\microphone_muted.ico`);
+		}
+		else {
+			// Update the tray icon
+			tray.setImage(__dirname + `\\img\\tray\\icon.ico`);
+		}
+
 		// Play soundfile
 		ts3client.playWaveFile(schID, __dirname + `\\sound\\${soundpack}\\sound_resumed.wav`);
 	} else {
@@ -832,6 +862,16 @@ function toggleMuteOutput () {
 
 		// Add the new class
 		iconElem.addClass('ion-android-volume-off');
+
+		// Check if output is muted, if it is no need to update icon
+		if (ts3client.getClientVariableAsString(schID, selfClientID, ts3client.ClientProperties.INPUT_MUTED) == ts3client.MuteInputStatus.MUTED) {
+			// Update the tray icon
+			tray.setImage(__dirname + `\\img\\tray\\speakers_muted.ico`);
+		}
+		else {
+			// Update the tray icon
+			tray.setImage(__dirname + `\\img\\tray\\speakers_muted.ico`);
+		}
 
 		// Play soundfile
 		ts3client.playWaveFile(schID, __dirname + `\\sound\\${soundpack}\\sound_muted.wav`);
@@ -855,6 +895,16 @@ function toggleMuteInput () {
 		// Add the new class
 		iconElem.addClass('ion-android-microphone');
 
+		// Check if output is muted, if it is no need to update icon
+		if (ts3client.getClientVariableAsString(schID, selfClientID, ts3client.ClientProperties.OUTPUT_MUTED) == ts3client.MuteOutputStatus.MUTED) {
+			// Update the tray icon
+			tray.setImage(__dirname + `\\img\\tray\\speakers_muted.ico`);
+		}
+		else {
+			// Update the tray icon
+			tray.setImage(__dirname + `\\img\\tray\\icon.ico`);
+		}
+
 		// Play soundfile
 		ts3client.playWaveFile(schID, __dirname + `\\sound\\${soundpack}\\mic_activated.wav`);
 	} else {
@@ -867,6 +917,16 @@ function toggleMuteInput () {
 		// Add the new class
 		iconElem.addClass('ion-android-microphone-off');
 
+		// Check if output is muted, if it is no need to update icon
+		if (ts3client.getClientVariableAsString(schID, selfClientID, ts3client.ClientProperties.OUTPUT_MUTED) == ts3client.MuteOutputStatus.MUTED) {
+			// Update the tray icon
+			tray.setImage(__dirname + `\\img\\tray\\speakers_muted.ico`);
+		}
+		else {
+			// Update the tray icon
+			tray.setImage(__dirname + `\\img\\tray\\microphone_muted.ico`);
+		}
+	
 		// Play soundfile
 		ts3client.playWaveFile(schID, __dirname + `\\sound\\${soundpack}\\mic_muted.wav`);
 	}
