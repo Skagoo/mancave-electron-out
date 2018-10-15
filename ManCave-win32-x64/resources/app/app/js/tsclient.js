@@ -346,6 +346,13 @@ ts3client.on('onTextMessageEvent', function (schID, targetMode, toID, fromID, fr
 			} else {
 				// Play soundfile
 				ts3client.playWaveFile(schID, __dirname + `\\sound\\${soundpack}\\chat_message_inbound.wav`);
+
+				// Flash taskbar icon if window has no focus
+				var currWin = remote.getCurrentWindow();
+				if (!currWin.isFocused()) {
+					currWin.flashFrame(true);
+				}
+
 			}
 		})
 		.catch(function notOk(err) {
@@ -679,10 +686,10 @@ function ping() {
 
 	session.pingHost (target, function (error, target) {
 		if (error) {
-			log.info (target + ": " + error.toString ());
+			console.log(target + ": " + error.toString ());
 		}
 		else { // Internet connection alive
-			log.info (target + ": Alive");
+			console.log(target + ": Alive");
 			clearInterval(testConnectionInterval);
 
 			// Try to reconnect

@@ -118,6 +118,8 @@ function createMainWindow () {
       mainWin.show();
     }
   })
+
+  mainWin.once('focus', () => mainWin.flashFrame(false))
 }
 
 if (process.env.ELECTRON_ENV == 'dev') {
