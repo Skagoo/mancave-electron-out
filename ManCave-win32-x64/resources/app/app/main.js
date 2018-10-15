@@ -8,6 +8,8 @@ let settings = require('./js/settings.js');
 
 let log = require('electron-log');
 
+let videoConferenceWin;
+
 // Logging
 // Log level
 log.transports.console.level = 'info';
@@ -122,6 +124,43 @@ function createMainWindow () {
   mainWin.once('focus', () => mainWin.flashFrame(false))
 }
 
+function createVideoConferenceWindow () {
+  // Create the browser window.
+  videoConferenceWin = new BrowserWindow({
+    frame: false,
+    width: 960,
+    height: 600,
+    minHeight: 300,
+    minWidth: 769,
+    backgroundColor: '#282828',
+    show: false
+  })
+
+  // and load the index.html of the app.
+  videoConferenceWin.loadFile('app/video-conference.html')
+
+  // Open the DevTools.
+  // videoConferenceWin.webContents.openDevTools();
+  // videoConferenceWin.webContents.on("devtools-opened", () => {
+  //   videoConferenceWin.webContents.closeDevTools();
+  // }); 
+
+  // Emitted when the window is closed.
+  videoConferenceWin.on('closed', () => {
+    // Dereference the window object, usually you would store windows
+    // in an array if your app supports multi windows, this is the time
+    // when you should delete the corresponding element.
+    videoConferenceWin = null
+  })
+
+  // This method will be called when electron has finished creating
+  // the window. Now we can show it, this is done to avoid flashing
+  // or elements loading in visually.
+  videoConferenceWin.on('ready-to-show', () => {
+    videoConferenceWin.show();
+  })
+}
+
 if (process.env.ELECTRON_ENV == 'dev') {
   log.info('Running in development');
 } else { // ELECTRON_ENV == 'prod'
@@ -132,6 +171,18 @@ if (process.env.ELECTRON_ENV == 'dev') {
     event.sender.send('request-update-response', 'Request for update received');
   });
 }
+
+// Set listener for video conference request  
+ipcMain.on('request-video-conference', (event, arg) => {
+  event.sender.send('request-video-conference-response', 'Request for video conference received');
+
+  if (videoConferenceWin == null) {
+    createVideoConferenceWindow();
+  }
+  else {
+    videoConferenceWin.focus();
+  }
+});
 
 // Hotkeys
 function registerKeyboardShortcuts() {

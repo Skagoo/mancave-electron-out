@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>ManCave | Video Conference</title>
+    <link href='https://fonts.googleapis.com/css?family=Roboto:400,100,100italic,300,300italic,400italic,500,500italic,700,700italic,900italic,900'
+        rel='stylesheet' type='text/css'>
+
+    <link rel='stylesheet' href='http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css'>
+    <link rel='stylesheet' href='https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css'>
+    <link rel="stylesheet" href="http://cdn.arshen.ir/micon/2.2.155/dist/micon/css/micon.min.css">
+    <link rel='stylesheet' href='https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css'>
+    <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/8.3.0/nouislider.min.css'>
+
+    <link rel="stylesheet" href="css/waitMe.css">
+
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/video-conference.css">
+
+
+</head>
+
+<body>
+
+    <section class="header">
+
+        <!--
+  <div class="window__actions">
+    <i class="ion-record red"></i>
+    <i class="ion-record yellow"></i>
+    <i class="ion-record green"></i>
+  </div>
+  -->
+
+        <div class="page-flows">
+
+            <img src="img/sized_default_icons/icon_22.png" alt="ManCave Logo" class="img-responsive" id="user__info__img" />
+
+        </div>
+
+        <div class="user">
+
+            <div class="user__actions">
+            </div>
+
+            <div class="user__notifications">
+
+                <i class="mi mi-ChromeMinimize" id="min-button"></i>
+
+            </div>
+
+            <div class="user__notifications">
+
+                <i class="mi mi-ChromeMaximize" id="max-button"></i>
+                <i class="mi mi-ChromeRestore" id="restore-button"></i>
+
+            </div>
+
+            <div class="user__inbox">
+
+                <i class="mi mi-ChromeClose" id="close-button"></i>
+
+            </div>
+
+        </div>
+
+    </section>
+
+    <div class="connection-lost-container">
+        <section class="content">
+            <iframe id="appearin" src="https://appear.in/DeMannen" frameborder="0" allow="microphone *; camera *;"></iframe>
+        </section>
+    </div>
+
+    <!-- normal script imports etc  -->
+    <script type="text/javascript" src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    
+    <script type='text/javascript' src='js/video-conference.js'></script>
+    <script type='text/javascript' src='js/video-conference-renderer.js'></script>
+
+    <!-- Insert this line after script imports -->
+    <script>
+        if (window.module) module = window.module;
+    </script>
+
+</body>
+
+</html>

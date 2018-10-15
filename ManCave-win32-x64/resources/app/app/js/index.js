@@ -74,5 +74,17 @@ function checkForUpdates() {
 
 // Add the event listener for the response from the main process
 ipcRenderer.on('request-update-response', (event, arg) => {
-  log.info(arg);
+  console.log(arg);
 });
+
+// Video conference
+function startVideoConference() {
+  console.log('Starting video conference');
+  ipcRenderer.send('request-video-conference');
+}
+
+// Add the event listener for the response from the main process
+ipcRenderer.on('request-video-conference-response', (event, arg) => {
+  console.log(arg);
+});
+// End of Video conference
