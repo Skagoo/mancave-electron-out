@@ -313,4 +313,30 @@ function registerKeyboardShortcuts() {
       log.info('registration failed ( ' + acceleratorOpenDevTools + ')')
     }
   }
+
+
+  /**
+   * Whisperlist
+   * Initialize all hotkeys for configured whisperlist
+   */
+  var whisperlist = settings.whisperlist_value.get();
+  for (let i = 0; i < whisperlist.length; i++) {
+    const whisper = whisperlist[i];
+
+    var acceleratorWhisper = whisper.accelerator;
+    if (acceleratorWhisper != '') {
+      // Register ToggleMuteInput shortcut listener.
+      const ret = globalShortcut.register(acceleratorWhisper, () => {
+        log.info(acceleratorWhisper + ' is pressed ' + whisper.clientUID);
+      })
+    
+      if (ret && globalShortcut.isRegistered(acceleratorWhisper)) {
+        log.info('registration successfull ( ' + acceleratorWhisper + ')');
+      }
+      else {
+        log.info('registration failed ( ' + acceleratorWhisper + ')')
+      }
+    }
+  }
+  
 }

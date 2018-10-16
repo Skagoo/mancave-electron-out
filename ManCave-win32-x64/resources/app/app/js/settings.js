@@ -49,6 +49,9 @@ const hotkeyToggleMuteInput = 'hotkey.toggleMuteInput';
 const hotkeyToggleMuteOutput = 'hotkey.toggleMuteOutput';
 const hotkeyOpenDevTools = 'hotkey.openDevTools';
 
+// Whisperlist
+const whisperlist = 'whisperlist';
+
 
 // ============================================================
 // ========================= VALUES ===========================
@@ -371,6 +374,19 @@ var hotkeyOpenDevTools_value = {
     }
 }
 
+var whisperlist_value = {
+    get: function() {
+        if (!electronSettings.has(whisperlist)) {
+            return '';
+        }
+        return electronSettings.get(whisperlist);
+    },
+    set: function(val) {
+        // Save the value
+        electronSettings.set(whisperlist, val);
+    }
+}
+
 // Export values
 module.exports = {
     settingsPath_value: settingsPath_value,
@@ -394,5 +410,6 @@ module.exports = {
     preprocessorEchoCanceling_value : preprocessorEchoCanceling_value,
     hotkeyToggleMuteInput_value : hotkeyToggleMuteInput_value,
     hotkeyToggleMuteOutput_value : hotkeyToggleMuteOutput_value,
-    hotkeyOpenDevTools_value : hotkeyOpenDevTools_value
+    hotkeyOpenDevTools_value : hotkeyOpenDevTools_value,
+    whisperlist_value : whisperlist_value
 }
