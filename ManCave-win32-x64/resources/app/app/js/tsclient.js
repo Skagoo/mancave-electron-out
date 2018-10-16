@@ -143,8 +143,19 @@ function addClientsToChannelNav() {
 		// Get the name of the client's channel
 		var channelName = ts3client.getChannelVariableAsString(schID, channel, ts3client.ChannelProperties.NAME);
 
+		// Get talk status
+		var isTalking = (ts3client.getClientVariableAsString(schID, client, ts3client.ClientProperties.FLAG_TALKING) == ts3client.TalkStatus.TALKING);
+		var isWhisper = false;
+
+		// Get mute status
+		var isInputMuted = (ts3client.getClientVariableAsString(schID, client, ts3client.ClientProperties.INPUT_MUTED) == ts3client.MuteInputStatus.MUTED);
+		var isOutputMuted = (ts3client.getClientVariableAsString(schID, client, ts3client.ClientProperties.OUTPUT_MUTED) == ts3client.MuteOutputStatus.MUTED);
+
 		// Insert the client label under the correct channel
 		channelNav_addClient(client, nickname, channelName, channel);
+
+		// Update the client indicator
+		channelNav_UpdateClientIndicator(client, nickname, isTalking, isWhisper, isInputMuted, isOutputMuted)
 
 		if (client == selfClientID) {
 			// Update the active channel in ChannelNav
