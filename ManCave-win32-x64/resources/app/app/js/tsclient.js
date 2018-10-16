@@ -336,6 +336,14 @@ ts3client.on('onTalkStatusChangeEvent', function (schID, status, isWhisper, clie
 			else {
 				tray.setImage(__dirname + `\\img\\tray\\icon.ico`);
 			}
+
+			if (isOutputMuted) {
+				tray.setImage(__dirname + `\\img\\tray\\speakers_muted.ico`);
+			}
+			else if (isInputMuted){
+				tray.setImage(__dirname + `\\img\\tray\\microphone_muted.ico`);
+			}
+			
 			
 		}
 	} catch (error) {
