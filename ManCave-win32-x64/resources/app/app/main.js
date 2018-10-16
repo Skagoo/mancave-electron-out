@@ -10,6 +10,56 @@ let log = require('electron-log');
 
 let videoConferenceWin;
 
+// ThumbarButtons
+let thumbarButtonInput = {
+  tooltip: 'Mute microphone',
+  icon: __dirname + '/img/thumbar/microphone.png',
+  click () { mainWin.webContents.send('request-toggleMuteInput') }
+}
+
+let thumbarButtonOutput = {
+  tooltip: 'Mute speakers',
+  icon: __dirname + '/img/thumbar/speakers.png',
+  click () { mainWin.webContents.send('request-toggleMuteOutput') }
+}
+
+let thumbarButtonMutedInput = {
+  tooltip: 'Unmute microphone',
+  icon: __dirname + '/img/thumbar/microphone_muted.png',
+  click () { mainWin.webContents.send('request-toggleMuteInput') }
+}
+
+let thumbarButtonMutedOutput = {
+  tooltip: 'Unmute speakers',
+  icon: __dirname + '/img/thumbar/speakers_muted.png',
+  click () { mainWin.webContents.send('request-toggleMuteOutput') }
+}
+
+ipcMain.on('request-thumbar-input-output', (event, arg) => {
+  mainWin.setThumbarButtons([
+    thumbarButtonOutput,
+    thumbarButtonInput
+  ]);
+});
+ipcMain.on('request-thumbar-minput-output', (event, arg) => {
+  mainWin.setThumbarButtons([
+    thumbarButtonOutput,
+    thumbarButtonMutedInput
+  ]);
+});
+ipcMain.on('request-thumbar-input-moutput', (event, arg) => {
+  mainWin.setThumbarButtons([
+    thumbarButtonMutedOutput,
+    thumbarButtonInput
+  ]);
+});
+ipcMain.on('request-thumbar-minput-moutput', (event, arg) => {
+  mainWin.setThumbarButtons([
+    thumbarButtonMutedOutput,
+    thumbarButtonMutedInput
+  ]);
+});
+
 // Logging
 // Log level
 log.transports.console.level = 'info';
@@ -118,6 +168,16 @@ function createMainWindow () {
     log.info(settingsFile);
     if (electronSettings.has(settingsHostname)) {
       mainWin.show();
+
+      // console.log('=========' + mainWin.setThumbarButtons([
+      //   thumbarButtonOutput,
+      //   thumbarButtonInput
+      // ]));
+
+      mainWin.setThumbarButtons([
+        thumbarButtonOutput,
+        thumbarButtonInput
+      ]);
     }
   })
 

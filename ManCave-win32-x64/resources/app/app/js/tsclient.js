@@ -852,10 +852,16 @@ function toggleMuteOutput () {
 		if (ts3client.getClientVariableAsString(schID, selfClientID, ts3client.ClientProperties.INPUT_MUTED) == ts3client.MuteInputStatus.MUTED) {
 			// Update the tray icon
 			tray.setImage(__dirname + `\\img\\tray\\microphone_muted.ico`);
+
+			// Update the thumbar
+			ipcRenderer.send('request-thumbar-minput-output');
 		}
 		else {
 			// Update the tray icon
 			tray.setImage(__dirname + `\\img\\tray\\icon.ico`);
+
+			// Update the thumbar
+			ipcRenderer.send('request-thumbar-input-output');
 		}
 
 		// Play soundfile
@@ -874,10 +880,16 @@ function toggleMuteOutput () {
 		if (ts3client.getClientVariableAsString(schID, selfClientID, ts3client.ClientProperties.INPUT_MUTED) == ts3client.MuteInputStatus.MUTED) {
 			// Update the tray icon
 			tray.setImage(__dirname + `\\img\\tray\\speakers_muted.ico`);
+
+			// Update the thumbar
+			ipcRenderer.send('request-thumbar-minput-moutput');
 		}
 		else {
 			// Update the tray icon
 			tray.setImage(__dirname + `\\img\\tray\\speakers_muted.ico`);
+
+			// Update the thumbar
+			ipcRenderer.send('request-thumbar-input-moutput');
 		}
 
 		// Play soundfile
@@ -906,10 +918,16 @@ function toggleMuteInput () {
 		if (ts3client.getClientVariableAsString(schID, selfClientID, ts3client.ClientProperties.OUTPUT_MUTED) == ts3client.MuteOutputStatus.MUTED) {
 			// Update the tray icon
 			tray.setImage(__dirname + `\\img\\tray\\speakers_muted.ico`);
+
+			// Update the thumbar
+			ipcRenderer.send('request-thumbar-input-moutput');
 		}
 		else {
 			// Update the tray icon
 			tray.setImage(__dirname + `\\img\\tray\\icon.ico`);
+
+			// Update the thumbar
+			ipcRenderer.send('request-thumbar-input-output');
 		}
 
 		// Play soundfile
@@ -928,10 +946,16 @@ function toggleMuteInput () {
 		if (ts3client.getClientVariableAsString(schID, selfClientID, ts3client.ClientProperties.OUTPUT_MUTED) == ts3client.MuteOutputStatus.MUTED) {
 			// Update the tray icon
 			tray.setImage(__dirname + `\\img\\tray\\speakers_muted.ico`);
+
+			// Update the thumbar
+			ipcRenderer.send('request-thumbar-minput-moutput');
 		}
 		else {
 			// Update the tray icon
 			tray.setImage(__dirname + `\\img\\tray\\microphone_muted.ico`);
+
+			// Update the thumbar
+			ipcRenderer.send('request-thumbar-minput-output');
 		}
 	
 		// Play soundfile
