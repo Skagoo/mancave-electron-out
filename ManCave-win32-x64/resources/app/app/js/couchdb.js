@@ -60,7 +60,7 @@ function loadTodaysChat() {
             var context = doc.messages[index].context;
             var template;
 
-            if (context.senderUID =! selfClientUID) { // Message was not sent by self
+            if (context.senderUID != selfClientUID) { // Message was not sent by self
                 templateID = templateID.replace('-template', '-response-template');
             }
             
