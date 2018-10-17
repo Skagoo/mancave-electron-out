@@ -115,6 +115,7 @@ body a:hover {
 .header .user__actions .dropdown-menu a {
   color: #aaaaaa;
   transition: all 0.2s ease;
+  cursor: pointer;
 }
 
 .header .user__actions .dropdown-menu a:hover {
@@ -129,12 +130,12 @@ body a:hover {
 }
 
 .header .user__actions .dropdown-menu li:hover {
-  background: #aaaaaa;
+  background: #424242;
   transition: all 0.2s ease;
 }
 
 .header .user__actions .dropdown-menu li:hover a {
-  color: #c8c8c8;
+  color: #fff;
   transition: all 0.2s ease;
 }
 
@@ -213,6 +214,7 @@ body a:hover {
 .navigation__list__item:hover {
   color: white;
   text-decoration: none;
+  cursor: pointer;
 }
 
 .navigation__list__item i {
@@ -423,6 +425,14 @@ body a:hover {
   text-transform: uppercase;
   width: 15%;
   padding: 0 15px 0 0;
+}
+
+.current-track__options .lyrics:hover {
+  text-decoration: none;
+}
+
+.current-track__options a {
+  cursor: pointer;
 }
 
 .current-track__options .controls {
@@ -1428,6 +1438,10 @@ button:hover {
 
 .noUi-active .noUi-tooltip {
   display: block;
+}
+
+.controls .volume {
+  cursor: default !important;
 }
 
 

@@ -380,6 +380,17 @@ ts3client.on('onTextMessageEvent', function (schID, targetMode, toID, fromID, fr
 });
 
 /**
+ * Register a callback function for 'onIgnoredWhisperEvent'. This will be triggered When a client
+ * recieves a whisper while the whispering client has not yet been added to the whisper allow list.
+ */
+ts3client.on('onIgnoredWhisperEvent', function (schID, clientID) {
+	ts3client.logMessage('Ignored whisper received from ' + clientID);
+
+	// Add the client to the whitelist
+	ts3client.allowWhispersFrom(schID, clientID);
+});
+
+/**
  * Register a callback function for 'onServerErrorEvent'. This will write an error message to the client log for errors
  * reported by the server.
  */
@@ -717,6 +728,62 @@ function ping() {
 	});
 }
 
+function clearWhisperlist() {
+	ts3client.requestClientSetWhisperList(schID, selfClientID, null, null);
+}
+
+function setWhisperlist(targetUID) {
+	var targetID;
+	
+	// Get all clients
+	var clientList = ts3client.getClientList(schID);
+
+	for (let index = 0; index < clientList.length; index++) {
+		// For each client, check their UID
+		var clientUID = ts3client.getClientVariableAsString(schID, clientList[index], ts3client.ClientProperties.UNIQUE_IDENTIFIER);
+
+		console.log(clientUID + ' ' + ts3client.getClientVariableAsString(schID, clientList[index], ts3client.ClientProperties.NICKNAME));
+
+		// Check if the UID of the client matches with the target UID
+		if (clientUID == targetUID) {
+			// Set the value of targetID
+			targetID = clientList[index];
+		}
+	}
+
+	if (targetID != null && targetID != selfClientID) {
+		// Get the name of the client
+		var nickname = ts3client.getClientVariableAsString(schID, targetID, ts3client.ClientProperties.NICKNAME);
+
+		// Get mute status
+		var isInputMuted = (ts3client.getClientVariableAsString(schID, targetID, ts3client.ClientProperties.INPUT_MUTED) == ts3client.MuteInputStatus.MUTED);
+		var isOutputMuted = (ts3client.getClientVariableAsString(schID, targetID, ts3client.ClientProperties.OUTPUT_MUTED) == ts3client.MuteOutputStatus.MUTED);
+
+		if (!isOutputMuted) {
+			var isTalking = true;
+			var isWhisper = true;
+			// Update the client indicator
+			channelNav_UpdateClientIndicator(targetID, nickname, isTalking, isWhisper, isInputMuted, isOutputMuted)
+
+			ts3client.requestClientSetWhisperList(schID, selfClientID, null, [targetID]);
+
+			ipcRenderer.send('request-set-last-whisper-target', targetUID);
+		}
+		else { // Target output muted
+			ts3client.logMessage('Whisper target output muted: ' + targetUID);
+	
+			// Play soundfile
+			ts3client.playWaveFile(schID, __dirname + `\\sound\\${soundpack}\\no_whisper_target_found.wav`);
+		}
+	}
+	else { // Target not found
+		ts3client.logMessage('Whisper target not found: ' + targetUID);
+
+		// Play soundfile
+		ts3client.playWaveFile(schID, __dirname + `\\sound\\${soundpack}\\no_whisper_target_found.wav`);
+	}
+}
+
 // UI
 // ============================================================
 // =========================== UI =============================
@@ -737,7 +804,7 @@ function channelNav_addChannel(channelID, channelName, spacer) {
 
 function channelNav_addClient(clientID, nickname, channelName, channelID) {
 	var navChannel = $('#' + channelName.replace(/[\s\&\:]/g, "") + '_' + channelID);
-	var elem = '<a href="#" class="navigation__list__item client" id="client-' + clientID + '"><img src="img/client_indicators/client_indicator.png" alt="icon"><span>' + nickname + '</span></a>';
+	var elem = '<a class="navigation__list__item client" id="client-' + clientID + '"><img src="img/client_indicators/client_indicator.png" alt="icon"><span>' + nickname + '</span></a>';
 	navChannel.after(elem);
 }
 
@@ -1173,6 +1240,14 @@ function showConnectionLostOverlay(show) {
 	}
 }
 
+$(window).on("beforeunload", function() {
+	// Close the teamspeak connection
+	ts3client.stopConnection(schID);
+})
+
 // IPC listeners
 ipcRenderer.on('request-toggleMuteInput', (evt, msg) => toggleMuteInput());
 ipcRenderer.on('request-toggleMuteOutput', (evt, msg) => toggleMuteOutput());
+
+ipcRenderer.on('request-clear-whisperlist', (evt, msg) => clearWhisperlist());
+ipcRenderer.on('request-set-whisperlist', (evt, targetUID) => setWhisperlist(targetUID));

@@ -10,6 +10,8 @@ let log = require('electron-log');
 
 let videoConferenceWin;
 
+let lastWhisperClientUID;
+
 // ThumbarButtons
 let thumbarButtonInput = {
   tooltip: 'Mute microphone',
@@ -244,6 +246,11 @@ ipcMain.on('request-video-conference', (event, arg) => {
   }
 });
 
+// Set listener for last whisper target  
+ipcMain.on('request-set-last-whisper-target', (event, targetUID) => {
+  lastWhisperClientUID = targetUID;
+});
+
 // Hotkeys
 function registerKeyboardShortcuts() {
   /**
@@ -323,11 +330,20 @@ function registerKeyboardShortcuts() {
   for (let i = 0; i < whisperlist.length; i++) {
     const whisper = whisperlist[i];
 
-    var acceleratorWhisper = whisper.accelerator;
+    const acceleratorWhisper = whisper.accelerator;
     if (acceleratorWhisper != '') {
       // Register ToggleMuteInput shortcut listener.
       const ret = globalShortcut.register(acceleratorWhisper, () => {
-        log.info(acceleratorWhisper + ' is pressed ' + whisper.clientUID);
+        log.info(acceleratorWhisper + ' is pressed');
+        
+        if (lastWhisperClientUID == whisper.clientUID) {
+          // Call function to clear whisperlist
+          mainWin.webContents.send('request-clear-whisperlist');
+        }
+        else {
+          // Call function to clear whisperlist
+          mainWin.webContents.send('request-set-whisperlist', whisper.clientUID);
+        }
       })
     
       if (ret && globalShortcut.isRegistered(acceleratorWhisper)) {
@@ -338,5 +354,5 @@ function registerKeyboardShortcuts() {
       }
     }
   }
-  
+
 }
