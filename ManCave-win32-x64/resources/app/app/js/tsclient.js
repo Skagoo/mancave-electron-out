@@ -27,6 +27,8 @@ let connectWin;
 
 var testConnectionInterval;
 
+let lastWhisperClientID;
+
 let ImgFormats = ['jpg', 'png', 'bmp', 'jpeg', 'jif', 'jiff'];
 
 const Tray = remote.Tray;
@@ -325,6 +327,9 @@ ts3client.on('onTalkStatusChangeEvent', function (schID, status, isWhisper, clie
 		// Get mute status
 		var isInputMuted = (ts3client.getClientVariableAsString(schID, clientID, ts3client.ClientProperties.INPUT_MUTED) == ts3client.MuteInputStatus.MUTED);
 		var isOutputMuted = (ts3client.getClientVariableAsString(schID, clientID, ts3client.ClientProperties.OUTPUT_MUTED) == ts3client.MuteOutputStatus.MUTED);
+
+		console.log(isWhisper);
+
 		// Update the clients status indicator
 		channelNav_UpdateClientIndicator(clientID, clientName, isTalking, isWhisper, isInputMuted, isOutputMuted);
 
@@ -729,10 +734,17 @@ function ping() {
 }
 
 function clearWhisperlist() {
-	ts3client.requestClientSetWhisperList(schID, selfClientID, null, null);
+	ts3client.requestClientSetWhisperList(schID, selfClientID, [], []);
+
+	if (lastWhisperClientID != null) {
+		// Update the client indicator
+		channelNav_whisperTarget(lastWhisperClientID, false);
+	}
 }
 
 function setWhisperlist(targetUID) {
+	clearWhisperlist();
+
 	var targetID;
 	
 	// Get all clients
@@ -756,16 +768,17 @@ function setWhisperlist(targetUID) {
 		var nickname = ts3client.getClientVariableAsString(schID, targetID, ts3client.ClientProperties.NICKNAME);
 
 		// Get mute status
-		var isInputMuted = (ts3client.getClientVariableAsString(schID, targetID, ts3client.ClientProperties.INPUT_MUTED) == ts3client.MuteInputStatus.MUTED);
+		// var isInputMuted = (ts3client.getClientVariableAsString(schID, targetID, ts3client.ClientProperties.INPUT_MUTED) == ts3client.MuteInputStatus.MUTED);
 		var isOutputMuted = (ts3client.getClientVariableAsString(schID, targetID, ts3client.ClientProperties.OUTPUT_MUTED) == ts3client.MuteOutputStatus.MUTED);
 
 		if (!isOutputMuted) {
-			var isTalking = true;
-			var isWhisper = true;
-			// Update the client indicator
-			channelNav_UpdateClientIndicator(targetID, nickname, isTalking, isWhisper, isInputMuted, isOutputMuted)
+			// Set as last whisper target
+			lastWhisperClientID = targetID;
 
-			ts3client.requestClientSetWhisperList(schID, selfClientID, null, [targetID]);
+			// Update the client indicator
+			channelNav_whisperTarget(targetID, true);
+
+			ts3client.requestClientSetWhisperList(schID, selfClientID, [], [targetID]);
 
 			ipcRenderer.send('request-set-last-whisper-target', targetUID);
 		}
@@ -855,6 +868,18 @@ function channelNav_UpdateClientIndicator(clientID, nickname, isTalking, isWhisp
 		}
 	} else {
 		clientElem.children('img').attr('src', 'img/client_indicators/client_indicator.png');
+	}
+}
+
+function channelNav_whisperTarget(clientID, isTarget) {
+	// Get the client element
+	var clientElem = $('#client-' + clientID);
+
+	if (isTarget) {
+		clientElem.addClass('whisper-target');
+	}
+	else {
+		clientElem.removeClass('whisper-target');
 	}
 }
 

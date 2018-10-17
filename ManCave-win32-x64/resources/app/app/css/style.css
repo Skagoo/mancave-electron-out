@@ -1419,6 +1419,15 @@ button:hover {
   margin-left: 8px;
 }
 
+.navigation__list__item.client.whisper-target::after {
+  font-family: FontAwesome;
+  content: "\f111";
+  display: inline-block;
+  font-size: 0.6em;
+  margin-left: 5px;
+  color: red;
+}
+
 .navigation__list__item.client img {
   height: 16px;
   width: auto;

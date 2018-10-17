@@ -339,6 +339,8 @@ function registerKeyboardShortcuts() {
         if (lastWhisperClientUID == whisper.clientUID) {
           // Call function to clear whisperlist
           mainWin.webContents.send('request-clear-whisperlist');
+
+          lastWhisperClientUID = null;
         }
         else {
           // Call function to clear whisperlist
