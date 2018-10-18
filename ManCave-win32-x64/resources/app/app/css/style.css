@@ -3,6 +3,10 @@ body {
   font-family: 'Roboto', sans-serif;
 }
 
+body.loading {
+  cursor: wait;
+}
+
 body a {
   color: #aaaaaa;
 }
@@ -1588,4 +1592,8 @@ button:hover {
 
 .webm-video {
   width: inherit;
+}
+
+.iv-close {
+  visibility: hidden;
 }

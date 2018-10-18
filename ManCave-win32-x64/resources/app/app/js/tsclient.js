@@ -378,6 +378,27 @@ ts3client.on('onTextMessageEvent', function (schID, targetMode, toID, fromID, fr
 				}
 
 			}
+
+			// Enable imageViewer
+			var viewer = ImageViewer();
+			$('.gallery-items').click(function () {
+				var imgSrc = this.src;
+				var highResolutionImage = $(this).data('high-res-img');
+		
+				viewer.show(imgSrc, highResolutionImage);
+
+				$(document).on("contextmenu", ".iv-container", function(e){
+					viewer.hide();
+					return false;
+				 });
+	
+				 document.onkeydown = function(evt) {
+					evt = evt || window.event;
+					if (evt.keyCode == 27) {
+						viewer.hide();
+					}
+				};
+			});
 		})
 		.catch(function notOk(err) {
 			console.error(err)
@@ -677,9 +698,20 @@ function sendPoke(message) {
 	console.log('function reached');
 }
 
+function sendImageFromClipboard(imgBase64) {
+	if (imgBase64 != null) {
+		// Upload to imgur
+		imgur.uploadBase64(imgBase64)
+			.then(function (json) {
+				sendMessage('[IMG]' + json.data.link);
+			})
+			.catch(function (err) {
+				console.error(err.message);
+			});
+	}
+}
 
 function sendImage() {
-	const fs = require('fs');
 	var img = openImageDialog();
 
 	if (img != null) {
@@ -1092,7 +1124,7 @@ function renderMessage(fromClient, fromClientID, fromClientUID, message) {
 				context = {
 					sender: fromClient,
 					senderUID: fromClientUID,
-					messageContent: '<img src="' + url + '" alt="Unable to load image" class="img-responsive" style="max-width:250px;max-height:250px;">',
+					messageContent: '<img src="' + url + '" alt="Unable to load image" class="img-responsive gallery-items" style="max-width:450px;max-height:450px;float:right;">',
 					time: chat.getCurrentTime()
 				};
 			} else if (validUrl.isUri(message)) { // URL, handle it
@@ -1104,7 +1136,7 @@ function renderMessage(fromClient, fromClientID, fromClientUID, message) {
 							var match = data.match(regex).slice(-1)[0];
 							if (match) { // found what we need e.g. <img id="post-content" src="http://domain.com/image/dyBtGvs.gif" />
 
-								match = match.replace('<img', '<img class="img-responsive" style="max-width:450px;max-height:450px;float:right;"');
+								match = match.replace('<img', '<img class="img-responsive gallery-items" style="max-width:450px;max-height:450px;float:right;"');
 
 								templateID = '#message-media-template';
 								template = Handlebars.compile($(templateID).html());
@@ -1132,7 +1164,7 @@ function renderMessage(fromClient, fromClientID, fromClientUID, message) {
 					context = {
 						sender: fromClient,
 						senderUID: fromClientUID,
-						messageContent: '<img src="' + message + '" alt="Unable to load image" class="img-responsive" style="max-width:250px;max-height:250px;">',
+						messageContent: '<img src="' + message + '" alt="Unable to load image" class="img-responsive gallery-items" style="max-width:450px;max-height:450px;float:right;">',
 						time: chat.getCurrentTime()
 					};
 				} else { // Message is a url, so render with message-media-template
@@ -1164,7 +1196,7 @@ function renderMessage(fromClient, fromClientID, fromClientUID, message) {
 				context = {
 					sender: fromClient,
 					senderUID: fromClientUID,
-					messageContent: '<img src="' + url + '" alt="Unable to load image" class="img-responsive" style="max-width:250px;max-height:250px;">',
+					messageContent: '<img src="' + url + '" alt="Unable to load image" class="img-responsive gallery-items" style="max-width:450px;max-height:450px;float:left;">',
 					time: chat.getCurrentTime()
 				};
 			} else if (validUrl.isUri(message)) { // URL, handle it
@@ -1176,7 +1208,7 @@ function renderMessage(fromClient, fromClientID, fromClientUID, message) {
 							var match = data.match(regex).slice(-1)[0];
 							if (match) { // found what we need e.g. <img id="post-content" src="http://domain.com/image/dyBtGvs.gif" />
 
-								match = match.replace('<img', '<img class="img-responsive" style="max-width:450px;max-height:450px;float:left;"');
+								match = match.replace('<img', '<img class="img-responsive gallery-items" style="max-width:450px;max-height:450px;float:left;"');
 
 								templateID = '#message-media-response-template';
 								template = Handlebars.compile($(templateID).html());
@@ -1204,7 +1236,7 @@ function renderMessage(fromClient, fromClientID, fromClientUID, message) {
 					context = {
 						sender: fromClient,
 						senderUID: fromClientUID,
-						messageContent: '<img src="' + message + '" alt="Unable to load image" class="img-responsive" style="max-width:250px;max-height:250px;">',
+						messageContent: '<img src="' + message + '" alt="Unable to load image" class="img-responsive gallery-items" style="max-width:450px;max-height:450px;float:left;">',
 						time: chat.getCurrentTime()
 					};
 				} else { // Message is a url, so render with message-media-response-template

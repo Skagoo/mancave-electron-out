@@ -1,11 +1,11 @@
-2018-10-17 23:08:20:605|info|Running in production
-2018-10-17 23:08:20:645|info|App ready
-2018-10-17 23:08:20:661|info|registration successfull ( F1)
-2018-10-17 23:08:20:662|info|registration successfull ( F2)
-2018-10-17 23:08:20:663|info|registration successfull ( CommandOrControl+Shift+I)
-2018-10-17 23:08:20:665|info|registration successfull ( Shift+F1)
-2018-10-17 23:08:20:665|info|registration successfull ( Shift+F2)
-2018-10-17 23:08:20:666|info|registration successfull ( Shift+F3)
-2018-10-17 23:08:20:667|info|registration successfull ( Shift+F4)
-2018-10-17 23:08:20:667|info|registration successfull ( Shift+F5)
-2018-10-17 23:08:21:431|info|C:\Users\Sacha\AppData\Roaming\ManCave\Settings
+2018-10-18 02:57:29:049|info|Running in production
+2018-10-18 02:57:29:091|info|App ready
+2018-10-18 02:57:29:106|info|registration successfull ( F1)
+2018-10-18 02:57:29:107|info|registration successfull ( F2)
+2018-10-18 02:57:29:108|info|registration successfull ( CommandOrControl+Shift+I)
+2018-10-18 02:57:29:109|info|registration successfull ( Shift+F1)
+2018-10-18 02:57:29:109|info|registration successfull ( Shift+F2)
+2018-10-18 02:57:29:110|info|registration successfull ( Shift+F3)
+2018-10-18 02:57:29:110|info|registration successfull ( Shift+F4)
+2018-10-18 02:57:29:111|info|registration successfull ( Shift+F5)
+2018-10-18 02:57:29:842|info|C:\Users\Sacha\AppData\Roaming\ManCave\Settings

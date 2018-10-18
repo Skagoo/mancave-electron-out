@@ -71,6 +71,27 @@ function loadTodaysChat() {
         }
         chat.scrollToBottom();
 
+        // Enable imageViewer
+        var viewer = ImageViewer();
+        $('.gallery-items').click(function () {
+            var imgSrc = this.src;
+            var highResolutionImage = $(this).data('high-res-img');
+    
+            viewer.show(imgSrc, highResolutionImage);
+
+            $(document).on("contextmenu", ".iv-container", function(e){
+                viewer.hide();
+                return false;
+             });
+
+             document.onkeydown = function(evt) {
+                evt = evt || window.event;
+                if (evt.keyCode == 27) {
+                    viewer.hide();
+                }
+            };
+        });
+
     }, err => {
         // either request error occured
         // ...or err.code=EDOCMISSING if document is missing
