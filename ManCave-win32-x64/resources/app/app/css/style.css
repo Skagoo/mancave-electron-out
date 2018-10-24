@@ -1478,6 +1478,7 @@ button:hover {
 }
 .chat .chat-history .message-data {
   margin-bottom: 15px;
+  user-select: none;
 }
 .chat .chat-history .message-data-time {
   /* color: #aaaaaa; */
@@ -1596,4 +1597,14 @@ button:hover {
 
 .iv-close {
   visibility: hidden;
+}
+
+#message-expand {
+  cursor: pointer;
+  user-select: none;
+}
+
+#message-collapse {
+  cursor: pointer;
+  user-select: none;
 }

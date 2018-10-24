@@ -28,43 +28,33 @@ global.chat = {
   render: function() {
     this.scrollToBottom();
     if (this.messageToSend.trim() !== '') {
-    //   var template = Handlebars.compile( $("#message-template").html());
-    //   var context = { 
-    //     messageOutput: this.messageToSend,
-    //     time: this.getCurrentTime()
-    //   };
-
-    //   this.$chatHistoryList.append(template(context));
-    //   this.scrollToBottom();
       this.$textInput.val('');
-      
-      // responses
-    //   var templateResponse = Handlebars.compile( $("#message-response-template").html());
-    //   var contextResponse = { 
-    //     response: this.getRandomItem(this.messageResponses),
-    //     time: this.getCurrentTime()
-    //   };
-      
-    //   setTimeout(function() {
-    //     this.$chatHistoryList.append(templateResponse(contextResponse));
-    //     this.scrollToBottom();
-    //   }.bind(this), 1500);
-      
     }
 
       setTimeout(function() {
         this.scrollToBottom();
       }.bind(this), 1000);
-    
   },
   
   addMessage: function() {
     this.messageToSend = this.$textInput.val();
 
-    // tsclient.js method
-    sendMessage(this.messageToSend);
+    // Check for commands
+    // NSFW
+    if (this.messageToSend.toLowerCase() == '/nsfw') { showNSFW(!getNSFWVisibility()); }
+    else if (this.messageToSend.toLowerCase().trim() == '/nsfw show') { showNSFW(true); }
+    else if (this.messageToSend.toLowerCase() == '/nsfw hide') { showNSFW(false); }
 
-    this.render();         
+    // Expand/Collapse
+    else if (this.messageToSend.toLowerCase() == '/collapse') { collapseAll(); }
+    else if (this.messageToSend.toLowerCase() == '/expand') { expandAll(); }
+
+    else { // Not a command so just send the message and render it
+      // tsclient.js method
+      sendMessage(this.messageToSend);
+    }
+
+    this.render();
   },
   addMessageEnter: function(event) {
       // enter was pressed
@@ -157,3 +147,60 @@ window.addEventListener("paste", function(e){
       }
   });
 }, false);
+
+function toggleShowHideMessage(sender) {
+  var messageContent = $(sender).parent().parent().find('.message')[0];
+  var iconCollapse = $(sender).parent().find('#message-expand')[0];
+  var iconExpand = $(sender).parent().find('#message-collapse')[0];
+
+  $(messageContent).toggleClass("hidden");
+  $(iconCollapse).toggleClass("hidden");
+  $(iconExpand).toggleClass("hidden");
+}
+
+function showNSFW(show) {
+  var messageContent = $('.nsfw').find('.message')[0];
+  var iconCollapse = $('.nsfw').find('#message-expand')[0];
+  var iconExpand = $('.nsfw').find('#message-collapse')[0];
+
+  if (show) {
+    $(messageContent).removeClass("hidden");
+    $(iconCollapse).removeClass("hidden");
+    $(iconExpand).addClass("hidden");
+
+    // Save state
+    setNSFWVisibility(true);
+
+    console.log('Showing nsfw');
+  }
+  else {
+    $(messageContent).addClass("hidden");
+    $(iconCollapse).addClass("hidden");
+    $(iconExpand).removeClass("hidden");
+
+    // Save state
+    setNSFWVisibility(false);
+
+    console.log('Hiding nsfw');
+  }
+}
+
+function collapseAll() {
+  var messageContent = $('.image').find('.message')[0];
+  var iconCollapse = $('.image').find('#message-expand')[0];
+  var iconExpand = $('.image').find('#message-collapse')[0];
+
+  $(messageContent).addClass("hidden");
+  $(iconCollapse).addClass("hidden");
+  $(iconExpand).removeClass("hidden");
+}
+
+function expandAll() {
+  var messageContent = $('.image').find('.message')[0];
+  var iconCollapse = $('.image').find('#message-expand')[0];
+  var iconExpand = $('.image').find('#message-collapse')[0];
+
+  $(messageContent).removeClass("hidden");
+  $(iconCollapse).removeClass("hidden");
+  $(iconExpand).addClass("hidden");
+}

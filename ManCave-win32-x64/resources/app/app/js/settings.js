@@ -52,6 +52,9 @@ const hotkeyOpenDevTools = 'hotkey.openDevTools';
 // Whisperlist
 const whisperlist = 'whisperlist';
 
+// Chat
+const chatNSFWVisibility = 'chat.NSFWVisibility';
+
 
 // ============================================================
 // ========================= VALUES ===========================
@@ -387,6 +390,20 @@ var whisperlist_value = {
     }
 }
 
+var chatNSFWVisibility_value = {
+    get: function() {
+        if (!electronSettings.has(chatNSFWVisibility)) {
+            // Show nsfw by default
+            return true;
+        }
+        return electronSettings.get(chatNSFWVisibility);
+    },
+    set: function(val) {
+        // Save the value
+        electronSettings.set(chatNSFWVisibility, val);
+    }
+}
+
 // Export values
 module.exports = {
     settingsPath_value: settingsPath_value,
@@ -411,5 +428,6 @@ module.exports = {
     hotkeyToggleMuteInput_value : hotkeyToggleMuteInput_value,
     hotkeyToggleMuteOutput_value : hotkeyToggleMuteOutput_value,
     hotkeyOpenDevTools_value : hotkeyOpenDevTools_value,
-    whisperlist_value : whisperlist_value
+    whisperlist_value : whisperlist_value,
+    chatNSFWVisibility_value : chatNSFWVisibility_value
 }

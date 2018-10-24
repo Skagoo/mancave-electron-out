@@ -210,8 +210,10 @@
     <script id="message-template" type="text/x-handlebars-template">
         <li class="clearfix">
             <div class="message-data align-right">
+                <i class="ion-chevron-down" id="message-expand" onclick="toggleShowHideMessage(this)"></i>
+                <i class="ion-chevron-left hidden" id="message-collapse" onclick="toggleShowHideMessage(this)"></i> &nbsp;
                 <span class="message-data-time" >{{time}}</span> &nbsp; &nbsp;
-                <span class="message-data-name" >me</span> <i class="fa fa-circle me"></i>
+                <span class="message-data-name" >me </span> <i class="fa fa-circle me"></i>
             </div>
             <div class="message other-message float-right">
                 {{messageContent}}
@@ -223,7 +225,9 @@
         <li>
             <div class="message-data">
                 <span class="message-data-name"><i class="fa fa-circle online"></i> {{sender}}</span>
-                <span class="message-data-time">{{time}}</span>
+                <span class="message-data-time">{{time}}</span> &nbsp;
+                <i class="ion-chevron-down" id="message-expand" onclick="toggleShowHideMessage(this)"></i>
+                <i class="ion-chevron-right hidden" id="message-collapse" onclick="toggleShowHideMessage(this)"></i>
             </div>
             <div class="message my-message">
                 {{messageContent}}
@@ -232,10 +236,12 @@
     </script>
 
     <script id="message-media-template" type="text/x-handlebars-template">
-        <li class="clearfix">
+        <li class="clearfix {{category}}">
             <div class="message-data align-right">
+                <i class="ion-chevron-down" id="message-expand" onclick="toggleShowHideMessage(this)"></i>
+                <i class="ion-chevron-left hidden" id="message-collapse" onclick="toggleShowHideMessage(this)"></i> &nbsp;
                 <span class="message-data-time" >{{time}}</span> &nbsp; &nbsp;
-                <span class="message-data-name" >me</span> <i class="fa fa-circle me"></i>
+                <span class="message-data-name" >me </span> <i class="fa fa-circle me"></i>
             </div>
             <div class="message other-message float-right">
                 {{{messageContent}}}
@@ -244,10 +250,12 @@
     </script>
 
     <script id="message-media-response-template" type="text/x-handlebars-template">
-        <li>
+        <li class="{{category}}">
             <div class="message-data">
                 <span class="message-data-name"><i class="fa fa-circle online"></i> {{sender}}</span>
-                <span class="message-data-time">{{time}}</span>
+                <span class="message-data-time">{{time}}</span> &nbsp;
+                <i class="ion-chevron-down" id="message-expand" onclick="toggleShowHideMessage(this)"></i>
+                <i class="ion-chevron-right hidden" id="message-collapse" onclick="toggleShowHideMessage(this)"></i>
             </div>
             <div class="message my-message">
                 {{{messageContent}}}

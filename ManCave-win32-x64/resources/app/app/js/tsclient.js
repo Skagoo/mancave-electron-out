@@ -829,6 +829,16 @@ function setWhisperlist(targetUID) {
 	}
 }
 
+function setNSFWVisibility(visible) {
+	// Save in settings
+	settings.chatNSFWVisibility_value.set(visible);
+}
+
+function getNSFWVisibility() {
+	// Get from settings
+	return settings.chatNSFWVisibility_value.get();
+}
+
 // UI
 // ============================================================
 // =========================== UI =============================
@@ -1125,7 +1135,8 @@ function renderMessage(fromClient, fromClientID, fromClientUID, message) {
 					sender: fromClient,
 					senderUID: fromClientUID,
 					messageContent: '<img src="' + url + '" alt="Unable to load image" class="img-responsive gallery-items" style="max-width:450px;max-height:450px;float:right;">',
-					time: chat.getCurrentTime()
+					time: chat.getCurrentTime(),
+					category: "image"
 				};
 			} else if (validUrl.isUri(message)) { // URL, handle it
 				if (message.includes('instantfap.com')) {
@@ -1144,7 +1155,8 @@ function renderMessage(fromClient, fromClientID, fromClientUID, message) {
 									sender: fromClient,
 									senderUID: fromClientUID,
 									messageContent: match,
-									time: chat.getCurrentTime()
+									time: chat.getCurrentTime(),
+									category: "image nsfw"
 								};
 
 								// Show
@@ -1165,7 +1177,8 @@ function renderMessage(fromClient, fromClientID, fromClientUID, message) {
 						sender: fromClient,
 						senderUID: fromClientUID,
 						messageContent: '<img src="' + message + '" alt="Unable to load image" class="img-responsive gallery-items" style="max-width:450px;max-height:450px;float:right;">',
-						time: chat.getCurrentTime()
+						time: chat.getCurrentTime(),
+						category: "image url"
 					};
 				} else { // Message is a url, so render with message-media-template
 					templateID = '#message-media-template';
@@ -1174,7 +1187,8 @@ function renderMessage(fromClient, fromClientID, fromClientUID, message) {
 						sender: fromClient,
 						senderUID: fromClientUID,
 						messageContent: '<a href="' + message + '">' + message + '</a>',
-						time: chat.getCurrentTime()
+						time: chat.getCurrentTime(),
+						category: "url"
 					};
 				}
 			} else { // Message is just text, so render with message-template
@@ -1197,7 +1211,8 @@ function renderMessage(fromClient, fromClientID, fromClientUID, message) {
 					sender: fromClient,
 					senderUID: fromClientUID,
 					messageContent: '<img src="' + url + '" alt="Unable to load image" class="img-responsive gallery-items" style="max-width:450px;max-height:450px;float:left;">',
-					time: chat.getCurrentTime()
+					time: chat.getCurrentTime(),
+					category: "image"
 				};
 			} else if (validUrl.isUri(message)) { // URL, handle it
 				if (message.includes('instantfap.com')) {
@@ -1216,7 +1231,8 @@ function renderMessage(fromClient, fromClientID, fromClientUID, message) {
 									sender: fromClient,
 									senderUID: fromClientUID,
 									messageContent: match,
-									time: chat.getCurrentTime()
+									time: chat.getCurrentTime(),
+									category: "image nsfw"
 								};
 
 								// Show
@@ -1237,7 +1253,8 @@ function renderMessage(fromClient, fromClientID, fromClientUID, message) {
 						sender: fromClient,
 						senderUID: fromClientUID,
 						messageContent: '<img src="' + message + '" alt="Unable to load image" class="img-responsive gallery-items" style="max-width:450px;max-height:450px;float:left;">',
-						time: chat.getCurrentTime()
+						time: chat.getCurrentTime(),
+						category: "image url"
 					};
 				} else { // Message is a url, so render with message-media-response-template
 					templateID = '#message-media-response-template';
@@ -1246,7 +1263,8 @@ function renderMessage(fromClient, fromClientID, fromClientUID, message) {
 						sender: fromClient,
 						senderUID: fromClientUID,
 						messageContent: '<a href="' + message + '">' + message + '</a>',
-						time: chat.getCurrentTime()
+						time: chat.getCurrentTime(),
+						category: "url"
 					};
 				}
 			} else { // Message is just text, so render with message-response-template

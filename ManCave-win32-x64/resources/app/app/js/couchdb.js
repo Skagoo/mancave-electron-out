@@ -71,6 +71,9 @@ function loadTodaysChat() {
         }
         chat.scrollToBottom();
 
+        // Set NSFW hidden/visible
+        showNSFW(getNSFWVisibility());
+
         // Enable imageViewer
         var viewer = ImageViewer();
         $('.gallery-items').click(function () {
