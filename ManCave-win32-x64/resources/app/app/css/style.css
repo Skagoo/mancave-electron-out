@@ -1608,3 +1608,7 @@ button:hover {
   cursor: pointer;
   user-select: none;
 }
+
+.other-message img {
+  float: right;
+}

@@ -1134,7 +1134,7 @@ function renderMessage(fromClient, fromClientID, fromClientUID, message) {
 				context = {
 					sender: fromClient,
 					senderUID: fromClientUID,
-					messageContent: '<img src="' + url + '" alt="Unable to load image" class="img-responsive gallery-items" style="max-width:450px;max-height:450px;float:right;">',
+					messageContent: '<img src="' + url + '" alt="Unable to load image" class="img-responsive gallery-items" style="max-width:450px;max-height:450px;">',
 					time: chat.getCurrentTime(),
 					category: "image"
 				};
@@ -1147,7 +1147,7 @@ function renderMessage(fromClient, fromClientID, fromClientUID, message) {
 							var match = data.match(regex).slice(-1)[0];
 							if (match) { // found what we need e.g. <img id="post-content" src="http://domain.com/image/dyBtGvs.gif" />
 
-								match = match.replace('<img', '<img class="img-responsive gallery-items" style="max-width:450px;max-height:450px;float:right;"');
+								match = match.replace('<img', '<img class="img-responsive gallery-items" style="max-width:450px;max-height:450px;"');
 
 								templateID = '#message-media-template';
 								template = Handlebars.compile($(templateID).html());
@@ -1176,7 +1176,7 @@ function renderMessage(fromClient, fromClientID, fromClientUID, message) {
 					context = {
 						sender: fromClient,
 						senderUID: fromClientUID,
-						messageContent: '<img src="' + message + '" alt="Unable to load image" class="img-responsive gallery-items" style="max-width:450px;max-height:450px;float:right;">',
+						messageContent: '<img src="' + message + '" alt="Unable to load image" class="img-responsive gallery-items" style="max-width:450px;max-height:450px;">',
 						time: chat.getCurrentTime(),
 						category: "image url"
 					};
@@ -1210,7 +1210,7 @@ function renderMessage(fromClient, fromClientID, fromClientUID, message) {
 				context = {
 					sender: fromClient,
 					senderUID: fromClientUID,
-					messageContent: '<img src="' + url + '" alt="Unable to load image" class="img-responsive gallery-items" style="max-width:450px;max-height:450px;float:left;">',
+					messageContent: '<img src="' + url + '" alt="Unable to load image" class="img-responsive gallery-items" style="max-width:450px;max-height:450px;">',
 					time: chat.getCurrentTime(),
 					category: "image"
 				};
@@ -1223,7 +1223,7 @@ function renderMessage(fromClient, fromClientID, fromClientUID, message) {
 							var match = data.match(regex).slice(-1)[0];
 							if (match) { // found what we need e.g. <img id="post-content" src="http://domain.com/image/dyBtGvs.gif" />
 
-								match = match.replace('<img', '<img class="img-responsive gallery-items" style="max-width:450px;max-height:450px;float:left;"');
+								match = match.replace('<img', '<img class="img-responsive gallery-items" style="max-width:450px;max-height:450px;"');
 
 								templateID = '#message-media-response-template';
 								template = Handlebars.compile($(templateID).html());
@@ -1252,7 +1252,7 @@ function renderMessage(fromClient, fromClientID, fromClientUID, message) {
 					context = {
 						sender: fromClient,
 						senderUID: fromClientUID,
-						messageContent: '<img src="' + message + '" alt="Unable to load image" class="img-responsive gallery-items" style="max-width:450px;max-height:450px;float:left;">',
+						messageContent: '<img src="' + message + '" alt="Unable to load image" class="img-responsive gallery-items" style="max-width:450px;max-height:450px;">',
 						time: chat.getCurrentTime(),
 						category: "image url"
 					};

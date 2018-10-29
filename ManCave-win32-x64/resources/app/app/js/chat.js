@@ -186,21 +186,36 @@ function showNSFW(show) {
 }
 
 function collapseAll() {
-  var messageContent = $('.image').find('.message')[0];
-  var iconCollapse = $('.image').find('#message-expand')[0];
-  var iconExpand = $('.image').find('#message-collapse')[0];
+  var chat = $('.chat');
+  var imageMessages = chat.find('.image');
 
-  $(messageContent).addClass("hidden");
-  $(iconCollapse).addClass("hidden");
-  $(iconExpand).removeClass("hidden");
+  for (let i = 0; i < imageMessages.length; i++) {
+    const imageMessage = imageMessages[i];
+
+    var messageContent = $(imageMessage).find('.message')[0];
+    var iconCollapse = $(imageMessage).find('#message-expand')[0];
+    var iconExpand = $(imageMessage).find('#message-collapse')[0];
+
+    $(messageContent).addClass("hidden");
+    $(iconCollapse).addClass("hidden");
+    $(iconExpand).removeClass("hidden");
+  }
+  
 }
 
 function expandAll() {
-  var messageContent = $('.image').find('.message')[0];
-  var iconCollapse = $('.image').find('#message-expand')[0];
-  var iconExpand = $('.image').find('#message-collapse')[0];
+  var chat = $('.chat');
+  var imageMessages = chat.find('.image');
 
-  $(messageContent).removeClass("hidden");
-  $(iconCollapse).removeClass("hidden");
-  $(iconExpand).addClass("hidden");
+  for (let i = 0; i < imageMessages.length; i++) {
+    const imageMessage = imageMessages[i];
+
+    var messageContent = $(imageMessage).find('.message')[0];
+    var iconCollapse = $(imageMessage).find('#message-expand')[0];
+    var iconExpand = $(imageMessage).find('#message-collapse')[0];
+
+    $(messageContent).removeClass("hidden");
+    $(iconCollapse).removeClass("hidden");
+    $(iconExpand).addClass("hidden");
+  }
 }
