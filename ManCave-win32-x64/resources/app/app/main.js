@@ -223,6 +223,20 @@ function createVideoConferenceWindow () {
   })
 }
 
+function update() {
+  // Disconnect client
+  mainWin.webContents.send('request-stop-connection');
+
+  // Initiate batch file (updater)
+  var updateDemoBatchPath = require("path").resolve(__dirname + '/../updateDemo.bat');
+  const spawn = require('child_process').spawn;
+  const bat = spawn('cmd.exe', ['/c', updateDemoBatchPath]);
+
+  // Batch file should terminate existing mancave process
+  // To be sure we initiate termination here as well.
+  mainWin.close();
+}
+
 if (process.env.ELECTRON_ENV == 'dev') {
   log.info('Running in development');
 } else { // ELECTRON_ENV == 'prod'
@@ -232,27 +246,60 @@ if (process.env.ELECTRON_ENV == 'dev') {
   ipcMain.on('request-update', (event, arg) => {
     event.sender.send('request-update-response', 'Request for update received');
 
-    // var simpleGit = require('simple-git');
-    // var NodeGit = require("nodegit");
-    var pathToRepo = require("path").resolve(__dirname + '../../../../../.git');
+    var updateAvailable = false;
 
-    log.info(pathToRepo);
-
-    // Check for available updates (git fetch | git status)
-    // simpleGit().fetch();
+    // Check for available updates (git fetch | git status) with batch file
+    var updateCheckBatchPath = require("path").resolve(__dirname + '/../updateCheck.bat');
     
-    // If updates available prompt to update
-    
-    // Prompt accepted
-        // Disconnect client
+    const spawn = require('child_process').spawn;
+    const bat = spawn('cmd.exe', ['/c', updateCheckBatchPath]);
 
-        // Initiate batch file (updater)
+    // Handle normal output
+    bat.stdout.on('data', (data) => {
+      // As said before, convert the Uint8Array to a readable string.
+      var str = String.fromCharCode.apply(null, data);
+      log.info(str);
 
-        // Batch file should terminate existing mancave process
-        // To be sure we initiate termination here as well.
+      if (str =! "") {
+        // Update available
+        log.info("Update available");
+        updateAvailable = true;
+      }
+    });
 
-    // Prompt rejected
-        // Close prompt and do nothing
+    // Handle error output
+    bat.stderr.on('data', (data) => {
+      // As said before, convert the Uint8Array to a readable string.
+      var str = String.fromCharCode.apply(null, data);
+      console.error(str);
+    });
+
+    // Handle on exit event
+    bat.on('exit', (code) => {
+      var preText = `Child (updateCheck.bat) exited with code ${code} : `;
+
+      switch(code){
+          case 0:
+              log.info(preText+"Something unknown happened executing the batch.");
+              break;
+          case 1:
+              log.info(preText+"Success");
+
+              // If updates available prompt to update
+              if (updateAvailable) {
+                // Prompt
+
+                // Prompt accepted
+                update();
+
+                // Prompt rejected
+                  // Close prompt and do nothing
+              }
+
+              break;
+      }
+    });
+
   });
 }
 

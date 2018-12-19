@@ -1326,3 +1326,5 @@ ipcRenderer.on('request-toggleMuteOutput', (evt, msg) => toggleMuteOutput());
 
 ipcRenderer.on('request-clear-whisperlist', (evt, msg) => clearWhisperlist());
 ipcRenderer.on('request-set-whisperlist', (evt, targetUID) => setWhisperlist(targetUID));
+
+ipcRenderer.on('request-stop-connection', (evt, msg) => ts3client.stopConnection(schID));
