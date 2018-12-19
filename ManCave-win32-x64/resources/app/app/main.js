@@ -232,8 +232,27 @@ if (process.env.ELECTRON_ENV == 'dev') {
   ipcMain.on('request-update', (event, arg) => {
     event.sender.send('request-update-response', 'Request for update received');
 
-    // Check for available updates
-    // Testing git fetch
+    // var simpleGit = require('simple-git');
+    // var NodeGit = require("nodegit");
+    var pathToRepo = require("path").resolve(__dirname + '../../../../../.git');
+
+    log.info(pathToRepo);
+
+    // Check for available updates (git fetch | git status)
+    // simpleGit().fetch();
+    
+    // If updates available prompt to update
+    
+    // Prompt accepted
+        // Disconnect client
+
+        // Initiate batch file (updater)
+
+        // Batch file should terminate existing mancave process
+        // To be sure we initiate termination here as well.
+
+    // Prompt rejected
+        // Close prompt and do nothing
   });
 }
 
