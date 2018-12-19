@@ -233,7 +233,7 @@ if (process.env.ELECTRON_ENV == 'dev') {
     event.sender.send('request-update-response', 'Request for update received');
 
     // Check for available updates
-
+    // Testing git fetch
   });
 }
 
