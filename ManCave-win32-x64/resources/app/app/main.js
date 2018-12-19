@@ -231,6 +231,9 @@ if (process.env.ELECTRON_ENV == 'dev') {
   // Set listener for update request  
   ipcMain.on('request-update', (event, arg) => {
     event.sender.send('request-update-response', 'Request for update received');
+
+    // Check for available updates
+    
   });
 }
 
