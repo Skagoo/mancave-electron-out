@@ -65,22 +65,22 @@ ipcMain.on('request-thumbar-minput-moutput', (event, arg) => {
 // Logging
 // Log level
 log.transports.console.level = 'info';
-log.transports.file.level = 'info';
+// log.transports.file.level = 'info';
 
 log.transports.console.format = '{y}-{m}-{d} {h}:{i}:{s}:{ms}|{level}|{text}';
-log.transports.file.format = '{y}-{m}-{d} {h}:{i}:{s}:{ms}|{level}|{text}';
+// log.transports.file.format = '{y}-{m}-{d} {h}:{i}:{s}:{ms}|{level}|{text}';
 
 // Set approximate maximum log size in bytes. When it exceeds,
 // the archived log will be saved as the log.old.log file
-log.transports.file.maxSize = 5 * 1024 * 1024;
+// log.transports.file.maxSize = 5 * 1024 * 1024;
 
 // Write to this file, must be set before first logging
-log.transports.file.file = __dirname + '/log.txt';
+// log.transports.file.file = __dirname + '/log.txt';
 
 // fs.createWriteStream options, must be set before first logging
 // you can find more information at
 // https://nodejs.org/api/fs.html#fs_fs_createwritestream_path_options
-log.transports.file.streamConfig = { flags: 'w' };
+// log.transports.file.streamConfig = { flags: 'w' };
 
 const electronSettings = require('electron-settings');
 const settingsPath = app.getPath('userData') + '\\Settings';
@@ -233,7 +233,7 @@ if (process.env.ELECTRON_ENV == 'dev') {
     event.sender.send('request-update-response', 'Request for update received');
 
     // Check for available updates
-    
+
   });
 }
 
