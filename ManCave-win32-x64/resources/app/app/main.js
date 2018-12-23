@@ -228,9 +228,9 @@ function update() {
   mainWin.webContents.send('request-stop-connection');
 
   // Initiate batch file (updater)
-  var updateDemoBatchPath = require("path").resolve(__dirname + '/../update.bat');
+  var updateBatchPath = require("path").resolve(__dirname + '/../update.bat');
   const {shell} = require('electron');
-  shell.openItem(updateDemoBatchPath);
+  shell.openItem(updateBatchPath);
 
   // Batch file should terminate existing mancave process
   // To be sure we initiate termination here as well.
@@ -260,9 +260,9 @@ if (process.env.ELECTRON_ENV == 'dev') {
       var str = String.fromCharCode.apply(null, data);
       log.info(str);
 
-      if (str != "") {
+      if (str.includes('branch is behind')) {
         // Update available
-        log.info("Update available");
+        log.info('Update available');
         updateAvailable = true;
       }
     });
@@ -280,10 +280,10 @@ if (process.env.ELECTRON_ENV == 'dev') {
 
       switch(code){
           case 0:
-              log.info(preText+"Something unknown happened executing the batch.");
+              log.info(preText+'Something unknown happened executing the batch.');
               break;
           case 1:
-              log.info(preText+"Success");
+              log.info(preText+'Success');
 
               // If updates available prompt to update
               if (updateAvailable) {

@@ -6,7 +6,7 @@ if not exist "C:\Program Files\Git\cmd\" (
 ) else (
 	"C:\Program Files\Git\cmd\git.exe" fetch
 	@ECHO ON
-	"C:\Program Files\Git\cmd\git.exe" status --porcelain
+	"C:\Program Files\Git\cmd\git.exe" status
 	@ECHO OFF
 )
 

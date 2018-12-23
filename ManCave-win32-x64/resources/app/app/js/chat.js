@@ -49,6 +49,17 @@ global.chat = {
     else if (this.messageToSend.toLowerCase() == '/collapse') { collapseAll(); }
     else if (this.messageToSend.toLowerCase() == '/expand') { expandAll(); }
 
+    // Poke
+    else if (this.messageToSend.toLowerCase().split(' ')[0] == '/poke') {
+      var targetName = this.messageToSend.split(' ')[1];
+
+
+      var command = this.messageToSend.split(' ')[0] + ' ' + targetName + ' ';
+      var message = this.messageToSend.replace(command, '');
+      
+      sendPoke(message, targetName);
+    }
+
     else { // Not a command so just send the message and render it
       // tsclient.js method
       sendMessage(this.messageToSend);
@@ -218,4 +229,9 @@ function expandAll() {
     $(iconCollapse).removeClass("hidden");
     $(iconExpand).addClass("hidden");
   }
+}
+
+function setInputText(text) {
+  $('#message-to-send').val(text);
+  $('#message-to-send').focus();
 }

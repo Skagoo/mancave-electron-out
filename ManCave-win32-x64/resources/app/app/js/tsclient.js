@@ -365,7 +365,8 @@ ts3client.on('onTalkStatusChangeEvent', function (schID, status, isWhisper, clie
 ts3client.on('onTextMessageEvent', function (schID, targetMode, toID, fromID, fromName, fromUID, message) {
 	ts3client.logMessage('Text message received from ' + fromName + ' (id:' + fromID + ') | target mode: ' + targetMode + ' | message: ' + message);
 
-	renderMessage(fromName, fromID, fromUID, message).then(function whenOk(response) {
+	if (targetMode == ts3client.TextMessageTargetMode.SERVER) {
+		renderMessage(fromName, fromID, fromUID, message).then(function whenOk(response) {
 			if (fromID == selfClientID) { // Message was sent by self
 				// Store in DB
 				addChatMessage(response);
@@ -405,6 +406,10 @@ ts3client.on('onTextMessageEvent', function (schID, targetMode, toID, fromID, fr
 		.catch(function notOk(err) {
 			console.error(err)
 		})
+	}
+	else if (targetMode == ts3client.TextMessageTargetMode.CLIENT) {
+		console.log();
+	}
 });
 
 /**
@@ -593,6 +598,24 @@ function joinChannel(channelID) {
 	ts3client.requestClientMove(schID, selfClientID, channelID);
 }
 
+function getClientFromNickname(targetNickname) {
+	// Get all clients
+	var clientList = ts3client.getClientList(schID);
+
+	for (let index = 0; index < clientList.length; index++) {
+		var client = clientList[index];
+
+		// Get the name of the client
+		var nickname = ts3client.getClientVariableAsString(schID, client, ts3client.ClientProperties.NICKNAME);
+		
+		if (nickname == targetNickname) {
+			return client;
+		}
+	}
+
+	return null;
+}
+
 function setPlaybackMasterVolume(value) {
 	// Set the master volume to the given value
 	ts3client.setPlaybackConfigValue(schID, 'volume_modifier', value);
@@ -697,8 +720,16 @@ function sendMessage(message) {
 	ts3client.requestSendServerTextMsg(schID, message);
 }
 
-function sendPoke(message) {
-	console.log('function reached');
+function sendPoke(message, targetNickname) {
+	var targetID = getClientFromNickname(targetNickname);
+
+	if (targetID != null) {
+		ts3client.requestSendPrivateTextMsg(schID, message, targetID);
+	}
+	else {
+		// Play soundfile
+		ts3client.playWaveFile(schID, __dirname + `\\sound\\${soundpack}\\error.wav`);
+	}
 }
 
 function sendImageFromClipboard(imgBase64) {

@@ -1,6 +1,7 @@
 const { ipcRenderer } = require('electron');
 
 var cmClientLastTarget = '';
+var cmClientLastTargetName = '';
 
 
 // Tooltips
@@ -119,9 +120,9 @@ function eventListenerCmclient(e) {
   };
   setPosition(origin);
 
-  console.log('Target client: ')
-  console.log(e.target.parentElement.id);
+  console.log(e);
   cmClientLastTarget = e.target.parentElement.id;
+  cmClientLastTargetName = e.target.innerText;
 
   return false;
 }
@@ -136,7 +137,9 @@ function cmClient_muteClient() {
 }
 
 function cmClient_pokeClient() {
-  return null;
+  var targetID = parseInt(cmClientLastTarget.split('-')[1]);
+  // sendPoke(targetID);
+  setInputText('/poke ' + cmClientLastTargetName + ' ');
 }
 
 function cmClient_whisperClient() {
