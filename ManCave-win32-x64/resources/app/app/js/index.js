@@ -1,5 +1,8 @@
 const { ipcRenderer } = require('electron');
 
+var cmClientLastTarget = '';
+
+
 // Tooltips
 
 $(function () {
@@ -88,3 +91,55 @@ ipcRenderer.on('request-video-conference-response', (event, arg) => {
   console.log(arg);
 });
 // End of Video conference
+
+// Context menu client
+const cmclient = document.querySelector(".cm-client");
+let cmclientVisible = false;
+
+const toggleCmclient = command => {
+  cmclient.style.display = command === "show" ? "block" : "none";
+  cmclientVisible = !cmclientVisible;
+};
+
+const setPosition = ({ top, left }) => {
+  cmclient.style.left = `${left}px`;
+  cmclient.style.top = `${top}px`;
+  toggleCmclient("show");
+};
+
+window.addEventListener("click", e => {
+  if(cmclientVisible)toggleCmclient("hide");
+});
+
+function eventListenerCmclient(e) {
+  e.preventDefault();
+  const origin = {
+    left: e.pageX,
+    top: e.pageY
+  };
+  setPosition(origin);
+
+  console.log('Target client: ')
+  console.log(e.target.parentElement.id);
+  cmClientLastTarget = e.target.parentElement.id;
+
+  return false;
+}
+
+function cmClient_moveClient() {
+  return null;
+}
+
+function cmClient_muteClient() {
+  var targetID = parseInt(cmClientLastTarget.split('-')[1]);
+  toggleMuteClient(targetID);
+}
+
+function cmClient_pokeClient() {
+  return null;
+}
+
+function cmClient_whisperClient() {
+  return null;
+}
+// End of Context menu client

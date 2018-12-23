@@ -22,7 +22,7 @@
 
 </head>
 
-<body>
+<body oncontextmenu="return false;">
 
     <section class="header">
 
@@ -196,6 +196,15 @@
             </div>
 
         </section>
+    </div>
+
+    <div class="cm-client">
+        <ul class="cm-client-options">
+            <li class="cm-client-option" onclick="cmClient_moveClient()">Move</li>
+            <li class="cm-client-option" onclick="cmClient_muteClient()">Mute/Unmute</li>
+            <li class="cm-client-option" onclick="cmClient_pokeClient()">Poke</li>
+            <li class="cm-client-option" onclick="cmClient_whisperClient()">Whisper</li>
+        </ul>
     </div>
 
 

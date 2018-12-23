@@ -228,9 +228,9 @@ function update() {
   mainWin.webContents.send('request-stop-connection');
 
   // Initiate batch file (updater)
-  var updateDemoBatchPath = require("path").resolve(__dirname + '/../updateDemo.bat');
-  const spawn = require('child_process').spawn;
-  const bat = spawn('cmd.exe', ['/c', updateDemoBatchPath]);
+  var updateDemoBatchPath = require("path").resolve(__dirname + '/../update.bat');
+  const {shell} = require('electron');
+  shell.openItem(updateDemoBatchPath);
 
   // Batch file should terminate existing mancave process
   // To be sure we initiate termination here as well.
@@ -260,7 +260,7 @@ if (process.env.ELECTRON_ENV == 'dev') {
       var str = String.fromCharCode.apply(null, data);
       log.info(str);
 
-      if (str =! "") {
+      if (str != "") {
         // Update available
         log.info("Update available");
         updateAvailable = true;

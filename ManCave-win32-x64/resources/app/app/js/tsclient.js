@@ -152,12 +152,13 @@ function addClientsToChannelNav() {
 		// Get mute status
 		var isInputMuted = (ts3client.getClientVariableAsString(schID, client, ts3client.ClientProperties.INPUT_MUTED) == ts3client.MuteInputStatus.MUTED);
 		var isOutputMuted = (ts3client.getClientVariableAsString(schID, client, ts3client.ClientProperties.OUTPUT_MUTED) == ts3client.MuteOutputStatus.MUTED);
+		var isLocalMuted = (ts3client.getClientVariableAsString(schID, client, ts3client.ClientProperties.IS_MUTED) == ts3client.MuteOutputStatus.MUTED);
 
 		// Insert the client label under the correct channel
 		channelNav_addClient(client, nickname, channelName, channel);
 
 		// Update the client indicator
-		channelNav_UpdateClientIndicator(client, nickname, isTalking, isWhisper, isInputMuted, isOutputMuted)
+		channelNav_UpdateClientIndicator(client, nickname, isTalking, isWhisper, isInputMuted, isOutputMuted, isLocalMuted)
 
 		if (client == selfClientID) {
 			// Update the active channel in ChannelNav
@@ -327,11 +328,12 @@ ts3client.on('onTalkStatusChangeEvent', function (schID, status, isWhisper, clie
 		// Get mute status
 		var isInputMuted = (ts3client.getClientVariableAsString(schID, clientID, ts3client.ClientProperties.INPUT_MUTED) == ts3client.MuteInputStatus.MUTED);
 		var isOutputMuted = (ts3client.getClientVariableAsString(schID, clientID, ts3client.ClientProperties.OUTPUT_MUTED) == ts3client.MuteOutputStatus.MUTED);
+		var isLocalMuted = (ts3client.getClientVariableAsString(schID, clientID, ts3client.ClientProperties.IS_MUTED) == ts3client.MuteOutputStatus.MUTED);
 
 		console.log(isWhisper);
 
 		// Update the clients status indicator
-		channelNav_UpdateClientIndicator(clientID, clientName, isTalking, isWhisper, isInputMuted, isOutputMuted);
+		channelNav_UpdateClientIndicator(clientID, clientName, isTalking, isWhisper, isInputMuted, isOutputMuted, isLocalMuted);
 
 		// If self, update tray icon
 		if (clientID == selfClientID) {
@@ -433,8 +435,9 @@ ts3client.on('onUpdateClientEvent', function (schID, clientID, invokerID, invoke
 		var isWhisper = false;
 		var isInputMuted = (ts3client.getClientVariableAsString(schID, clientID, ts3client.ClientProperties.INPUT_MUTED) == ts3client.MuteInputStatus.MUTED);
 		var isOutputMuted = (ts3client.getClientVariableAsString(schID, clientID, ts3client.ClientProperties.OUTPUT_MUTED) == ts3client.MuteOutputStatus.MUTED);
+		var isLocalMuted = (ts3client.getClientVariableAsString(schID, clientID, ts3client.ClientProperties.IS_MUTED) == ts3client.MuteOutputStatus.MUTED);
 
-		channelNav_UpdateClientIndicator(clientID, clientName, isTalking, isWhisper, isInputMuted, isOutputMuted);
+		channelNav_UpdateClientIndicator(clientID, clientName, isTalking, isWhisper, isInputMuted, isOutputMuted, isLocalMuted);
 	} catch (error) {
 		// Do nothing, client disconnected while talking
 	}
@@ -829,6 +832,29 @@ function setWhisperlist(targetUID) {
 	}
 }
 
+function toggleMuteClient(targetID) {
+	if (targetID != null && targetID != selfClientID) {
+
+		var nickname = ts3client.getClientVariableAsString(schID, targetID, ts3client.ClientProperties.NICKNAME);
+		var isTalking = (ts3client.getClientVariableAsString(schID, targetID, ts3client.ClientProperties.FLAG_TALKING) == ts3client.TalkStatus.TALKING);
+		var isWhisper = false;
+		var isInputMuted = (ts3client.getClientVariableAsString(schID, targetID, ts3client.ClientProperties.INPUT_MUTED) == ts3client.MuteInputStatus.MUTED);
+		var isOutputMuted = (ts3client.getClientVariableAsString(schID, targetID, ts3client.ClientProperties.OUTPUT_MUTED) == ts3client.MuteOutputStatus.MUTED);
+		var isLocalMuted = (ts3client.getClientVariableAsString(schID, targetID, ts3client.ClientProperties.IS_MUTED) == ts3client.MuteOutputStatus.MUTED);
+
+		if (isLocalMuted) {
+			ts3client.requestUnmuteClients(schID, [targetID]);
+			channelNav_UpdateClientIndicator(targetID, nickname, isTalking, isWhisper, isInputMuted, isOutputMuted, isLocalMuted);
+			console.log("requestUnmuteClients");
+		}
+		else {
+			ts3client.requestMuteClients(schID, [targetID]);
+			channelNav_UpdateClientIndicator(targetID, nickname, isTalking, isWhisper, isInputMuted, isOutputMuted, isLocalMuted);
+			console.log("requestMuteClients");
+		}
+	}
+}
+
 function setNSFWVisibility(visible) {
 	// Save in settings
 	settings.chatNSFWVisibility_value.set(visible);
@@ -859,7 +885,7 @@ function channelNav_addChannel(channelID, channelName, spacer) {
 
 function channelNav_addClient(clientID, nickname, channelName, channelID) {
 	var navChannel = $('#' + channelName.replace(/[\s\&\:]/g, "") + '_' + channelID);
-	var elem = '<a class="navigation__list__item client" id="client-' + clientID + '"><img src="img/client_indicators/client_indicator.png" alt="icon"><span>' + nickname + '</span></a>';
+	var elem = '<a class="navigation__list__item client" id="client-' + clientID + '" oncontextmenu="eventListenerCmclient(event);"><img src="img/client_indicators/client_indicator.png" alt="icon"><span>' + nickname + '</span></a>';
 	navChannel.after(elem);
 }
 
@@ -893,7 +919,7 @@ function channelNav_deleteClient(clientID) {
 	clientElem.remove();
 }
 
-function channelNav_UpdateClientIndicator(clientID, nickname, isTalking, isWhisper, isInputMuted, isOutputMuted) {
+function channelNav_UpdateClientIndicator(clientID, nickname, isTalking, isWhisper, isInputMuted, isOutputMuted, isLocalMuted) {
 	// Get the client element
 	var clientElem = $('#client-' + clientID);
 
@@ -902,6 +928,8 @@ function channelNav_UpdateClientIndicator(clientID, nickname, isTalking, isWhisp
 		clientElem.children('img').attr('src', 'img/client_indicators/client_indicator_speakers_muted_icon.png');
 	} else if (isInputMuted) {
 		clientElem.children('img').attr('src', 'img/client_indicators/client_indicator_microphone_muted_icon.png');
+	} else if (isLocalMuted) {
+		clientElem.children('img').attr('src', 'img/client_indicators/client_indicator_local_muted_icon.png');
 	} else if (isTalking) {
 		if (isWhisper) {
 			clientElem.children('img').attr('src', 'img/client_indicators/client_indicator_whispering.png');

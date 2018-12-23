@@ -1612,3 +1612,43 @@ button:hover {
 .other-message img {
   float: right;
 }
+
+/* Context menu */
+.cm-client {
+  width: 120px;
+  z-index: 1;
+  box-shadow: 0 4px 5px 3px rgba(0, 0, 0, 0.2);
+  position: fixed;
+  display: none;
+  transition: 0.2s display ease-in;
+  background: #282828;
+  color: #aaaaaa;
+}
+.cm-client .cm-client-options {
+  list-style: none;
+  padding: 0;
+  z-index: 1;
+}
+.cm-client .cm-client-options .cm-client-option {
+  /* font-weight: 500; */
+  z-index: 1;
+  font-size: 14px;
+  padding: 10px 40px 10px 20px;
+  cursor: pointer;
+}
+.cm-client .cm-client-options .cm-client-option:hover {
+  background: #424242;
+  color: #fff;
+  transition: all 0.2s ease;
+}
+
+.cm-client:before {
+  font-family: "Ionicons";
+  content: "\f365";
+  position: absolute;
+  top: -23px;
+  left: -7px;
+  color: #aaaaaa;
+  font-size: 36px;
+  transform: rotate(-45deg);
+}
