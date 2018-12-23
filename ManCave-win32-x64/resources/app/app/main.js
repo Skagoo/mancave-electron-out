@@ -234,6 +234,11 @@ function update() {
 
   // Batch file should terminate existing mancave process
   // To be sure we initiate termination here as well.
+
+  if (videoConferenceWin != null) {
+    videoConferenceWin.close();
+  }
+
   mainWin.close();
 }
 
