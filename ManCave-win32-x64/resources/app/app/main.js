@@ -320,6 +320,13 @@ ipcMain.on('request-set-last-whisper-target', (event, targetUID) => {
   lastWhisperClientUID = targetUID;
 });
 
+// Set listener for window focus request
+ipcMain.on('request-window-focus', (event, arg) => {
+  mainWin.setAlwaysOnTop(true);
+  mainWin.focus();
+  mainWin.setAlwaysOnTop(false);
+});
+
 // Hotkeys
 function registerKeyboardShortcuts() {
   /**

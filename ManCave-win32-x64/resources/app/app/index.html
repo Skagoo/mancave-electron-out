@@ -217,7 +217,7 @@
     </script>
 
     <script id="message-template" type="text/x-handlebars-template">
-        <li class="clearfix">
+        <li class="clearfix {{category}}">
             <div class="message-data align-right">
                 <i class="ion-chevron-down" id="message-expand" onclick="toggleShowHideMessage(this)"></i>
                 <i class="ion-chevron-left hidden" id="message-collapse" onclick="toggleShowHideMessage(this)"></i> &nbsp;
@@ -231,7 +231,7 @@
     </script>
 
     <script id="message-response-template" type="text/x-handlebars-template">
-        <li>
+        <li class="{{category}}">
             <div class="message-data">
                 <span class="message-data-name"><i class="fa fa-circle online"></i> {{sender}}</span>
                 <span class="message-data-time">{{time}}</span> &nbsp;

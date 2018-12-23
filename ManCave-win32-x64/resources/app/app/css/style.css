@@ -1489,6 +1489,16 @@ button:hover {
   color: #aaaaaa;
 }
 
+.chat .chat-history .poke .message-data-name::after {
+  color: #aaaaaa;
+  content: ' poked you';
+}
+
+.chat .chat-history .poke-self .message-data-name::after {
+  color: #aaaaaa;
+  content: ' (poke)';
+}
+
 .chat .chat-history .message {
   color: #aaaaaa;
   padding: 18px 20px;

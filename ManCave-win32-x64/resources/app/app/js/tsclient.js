@@ -366,7 +366,8 @@ ts3client.on('onTextMessageEvent', function (schID, targetMode, toID, fromID, fr
 	ts3client.logMessage('Text message received from ' + fromName + ' (id:' + fromID + ') | target mode: ' + targetMode + ' | message: ' + message);
 
 	if (targetMode == ts3client.TextMessageTargetMode.SERVER) {
-		renderMessage(fromName, fromID, fromUID, message).then(function whenOk(response) {
+		isPoke = false;
+		renderMessage(fromName, fromID, fromUID, message, isPoke).then(function whenOk(response) {
 			if (fromID == selfClientID) { // Message was sent by self
 				// Store in DB
 				addChatMessage(response);
@@ -408,7 +409,46 @@ ts3client.on('onTextMessageEvent', function (schID, targetMode, toID, fromID, fr
 		})
 	}
 	else if (targetMode == ts3client.TextMessageTargetMode.CLIENT) {
-		console.log();
+		if (fromID == selfClientID) { // Message was sent by self
+			// Dont store in DB
+		} else {
+			// Play soundfile
+			ts3client.playWaveFile(schID, __dirname + `\\sound\\${soundpack}\\you_were_poked.wav`);
+
+			ipcRenderer.send('request-window-focus');
+			
+			// Show modal (this is temp, shoul be replaced with styled window)
+			alert(fromName + ' poked you:\n' + message);
+		}
+
+		isPoke = true;
+
+		// Render messsage in chat as well
+		renderMessage(fromName, fromID, fromUID, message, isPoke).then(function whenOk(response) {
+			// Enable imageViewer
+			var viewer = ImageViewer();
+			$('.gallery-items').click(function () {
+				var imgSrc = this.src;
+				var highResolutionImage = $(this).data('high-res-img');
+		
+				viewer.show(imgSrc, highResolutionImage);
+
+				$(document).on("contextmenu", ".iv-container", function(e){
+					viewer.hide();
+					return false;
+				});
+	
+				document.onkeydown = function(evt) {
+					evt = evt || window.event;
+					if (evt.keyCode == 27) {
+						viewer.hide();
+					}
+				};
+			});
+		})
+		.catch(function notOk(err) {
+			console.error(err)
+		})
 	}
 });
 
@@ -1178,13 +1218,19 @@ function toggleMuteInput () {
 	ts3client.flushClientSelfUpdates(schID);
 }
 
-function renderMessage(fromClient, fromClientID, fromClientUID, message) {
+function renderMessage(fromClient, fromClientID, fromClientUID, message, isPoke) {
 	return new Promise(function (resolve, reject) {
 		var template;
 		var templateID;
 		var context;
 
+		var categoryExtension = '';
+
 		if (fromClientID == selfClientID) { // Message is from self
+			if (isPoke) {
+				categoryExtension = ' poke-self';
+			}
+
 			if (message.includes('[IMG]')) { // Message is uploaded IMG, so render with message-media-template
 				var url = message.replace('[IMG]', '');
 
@@ -1195,7 +1241,7 @@ function renderMessage(fromClient, fromClientID, fromClientUID, message) {
 					senderUID: fromClientUID,
 					messageContent: '<img src="' + url + '" alt="Unable to load image" class="img-responsive gallery-items" style="max-width:450px;max-height:450px;">',
 					time: chat.getCurrentTime(),
-					category: "image"
+					category: "image" + categoryExtension
 				};
 			} else if (validUrl.isUri(message)) { // URL, handle it
 				if (message.includes('instantfap.com')) {
@@ -1215,7 +1261,7 @@ function renderMessage(fromClient, fromClientID, fromClientUID, message) {
 									senderUID: fromClientUID,
 									messageContent: match,
 									time: chat.getCurrentTime(),
-									category: "image nsfw"
+									category: "image nsfw" + categoryExtension
 								};
 
 								// Show
@@ -1237,7 +1283,7 @@ function renderMessage(fromClient, fromClientID, fromClientUID, message) {
 						senderUID: fromClientUID,
 						messageContent: '<img src="' + message + '" alt="Unable to load image" class="img-responsive gallery-items" style="max-width:450px;max-height:450px;">',
 						time: chat.getCurrentTime(),
-						category: "image url"
+						category: "image url" + categoryExtension
 					};
 				} else { // Message is a url, so render with message-media-template
 					templateID = '#message-media-template';
@@ -1247,7 +1293,7 @@ function renderMessage(fromClient, fromClientID, fromClientUID, message) {
 						senderUID: fromClientUID,
 						messageContent: '<a href="' + message + '">' + message + '</a>',
 						time: chat.getCurrentTime(),
-						category: "url"
+						category: "url" + categoryExtension
 					};
 				}
 			} else { // Message is just text, so render with message-template
@@ -1257,10 +1303,15 @@ function renderMessage(fromClient, fromClientID, fromClientUID, message) {
 					sender: fromClient,
 					senderUID: fromClientUID,
 					messageContent: message,
-					time: chat.getCurrentTime()
+					time: chat.getCurrentTime(),
+					category: "text" + categoryExtension
 				};
 			}
 		} else { // Message is not from self
+			if (isPoke) {
+				categoryExtension = ' poke';
+			}
+			
 			if (message.includes('[IMG]')) { // Message is uploaded IMG, so render with message-media-response-template
 				var url = message.replace('[IMG]', '');
 
@@ -1271,7 +1322,7 @@ function renderMessage(fromClient, fromClientID, fromClientUID, message) {
 					senderUID: fromClientUID,
 					messageContent: '<img src="' + url + '" alt="Unable to load image" class="img-responsive gallery-items" style="max-width:450px;max-height:450px;">',
 					time: chat.getCurrentTime(),
-					category: "image"
+					category: "image" + categoryExtension
 				};
 			} else if (validUrl.isUri(message)) { // URL, handle it
 				if (message.includes('instantfap.com')) {
@@ -1291,7 +1342,7 @@ function renderMessage(fromClient, fromClientID, fromClientUID, message) {
 									senderUID: fromClientUID,
 									messageContent: match,
 									time: chat.getCurrentTime(),
-									category: "image nsfw"
+									category: "image nsfw" + categoryExtension
 								};
 
 								// Show
@@ -1313,7 +1364,7 @@ function renderMessage(fromClient, fromClientID, fromClientUID, message) {
 						senderUID: fromClientUID,
 						messageContent: '<img src="' + message + '" alt="Unable to load image" class="img-responsive gallery-items" style="max-width:450px;max-height:450px;">',
 						time: chat.getCurrentTime(),
-						category: "image url"
+						category: "image url" + categoryExtension
 					};
 				} else { // Message is a url, so render with message-media-response-template
 					templateID = '#message-media-response-template';
@@ -1323,7 +1374,7 @@ function renderMessage(fromClient, fromClientID, fromClientUID, message) {
 						senderUID: fromClientUID,
 						messageContent: '<a href="' + message + '">' + message + '</a>',
 						time: chat.getCurrentTime(),
-						category: "url"
+						category: "url" + categoryExtension
 					};
 				}
 			} else { // Message is just text, so render with message-response-template
@@ -1333,7 +1384,8 @@ function renderMessage(fromClient, fromClientID, fromClientUID, message) {
 					sender: fromClient,
 					senderUID: fromClientUID,
 					messageContent: message,
-					time: chat.getCurrentTime()
+					time: chat.getCurrentTime(),
+					category: "text" + categoryExtension
 				};
 			}
 		}
