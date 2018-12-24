@@ -1226,6 +1226,8 @@ function renderMessage(fromClient, fromClientID, fromClientUID, message, isPoke)
 
 		var categoryExtension = '';
 
+		var isPlyrPlayer = false;
+
 		if (fromClientID == selfClientID) { // Message is from self
 			if (isPoke) {
 				categoryExtension = ' poke-self';
@@ -1275,6 +1277,26 @@ function renderMessage(fromClient, fromClientID, fromClientUID, message, isPoke)
 							}
 						}
 					});
+				} else if (message.includes('youtube.') || message.includes('youtu.')) { // Youtube link
+					isPlyrPlayer = true;
+					templateID = '#message-media-template';
+					template = Handlebars.compile($(templateID).html());
+					context = {
+						sender: fromClient,
+						senderUID: fromClientUID,
+						// messageContent: '<a href="' + message + '">' + message + '</a>' +
+						// 				'<div class="plyr-player" data-plyr-provider="youtube" data-plyr-embed-id="' +
+						// 				message.split('v=')[1] + '"></div>',
+						messageContent: '<a href="' + message + '">' + message + '</a>' +
+										'<div class="plyr__video-embed" id="player">' +
+										'<iframe onload="hideRelatedVideoSection(this)" src="https://www.youtube.com/embed/' +
+										message.split('v=')[1] +
+										'?origin=https://plyr.io&amp;iv_load_policy=3&amp;modestbranding=1&amp;playsinline=1&amp;showinfo=0&amp;rel=0&amp;enablejsapi=1"' +
+										' allowfullscreen allowtransparency allow="autoplay"></iframe>' +
+										'</div>',
+						time: chat.getCurrentTime(),
+						category: "video url plyr youtube" + categoryExtension
+					};
 				} else if (ImgFormats.includes(message.split('.').slice(-1)[0])) { // is a direct url to an img
 					templateID = '#message-media-template';
 					template = Handlebars.compile($(templateID).html());
@@ -1392,6 +1414,20 @@ function renderMessage(fromClient, fromClientID, fromClientUID, message, isPoke)
 
 		if (template) {
 			chat.$chatHistoryList.append(template(context));
+
+			// Plyr check
+			if (isPlyrPlayer){
+				playerElem = $('.plyr-player:last')[0];
+				const player = new Plyr(
+					playerElem,
+					{
+						// Options
+						quality: { default: 'hd1080', options: ['hd2160', 'hd1440', 'hd1080', 'hd720', 'default'] }
+					}
+				);
+				window.players.push(player);
+			}
+
 			chat.scrollToBottom();
 			resolve({
 				"templateID": templateID,

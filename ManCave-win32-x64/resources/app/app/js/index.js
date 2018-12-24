@@ -146,3 +146,25 @@ function cmClient_whisperClient() {
   return null;
 }
 // End of Context menu client
+
+// Plyr
+function initPlyrPlayers() { 
+  // This is the bare minimum JavaScript. You can opt to pass no arguments to setup.
+  const players = Array.from(document.querySelectorAll('.plyr-player')).map(p => new Plyr(p));
+  
+  // Expose
+  window.players = players;
+
+  // Bind event listener
+  function on(selector, type, callback) {
+    document.querySelector(selector).addEventListener(type, callback, false);
+  }
+}
+// End of plyr
+
+function hideRelatedVideoSection(video) {
+  
+  style = document.createElement('style');
+  style.innerText = '.ytp-expand-pause-overlay .ytp-pause-overlay { display: none; }';
+  video.contentDocument.head.appendChild(style);
+}

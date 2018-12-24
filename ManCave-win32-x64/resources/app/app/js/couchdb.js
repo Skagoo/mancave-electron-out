@@ -95,6 +95,9 @@ function loadTodaysChat() {
             };
         });
 
+        // Init plyr
+        initPlyrPlayers();
+
     }, err => {
         // either request error occured
         // ...or err.code=EDOCMISSING if document is missing
