@@ -18,5 +18,5 @@ if not exist "%USERPROFILE%\Documents\ManCave\" (
 		"C:\Program Files\Git\cmd\git.exe" pull
 	)
 
-	start "%USERPROFILE%\Documents\ManCave\ManCave-win32-x64\ManCave.exe"
+	"%USERPROFILE%\Documents\ManCave\ManCave-win32-x64\ManCave.exe"
 )

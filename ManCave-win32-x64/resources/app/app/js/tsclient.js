@@ -1284,9 +1284,6 @@ function renderMessage(fromClient, fromClientID, fromClientUID, message, isPoke)
 					context = {
 						sender: fromClient,
 						senderUID: fromClientUID,
-						// messageContent: '<a href="' + message + '">' + message + '</a>' +
-						// 				'<div class="plyr-player" data-plyr-provider="youtube" data-plyr-embed-id="' +
-						// 				message.split('v=')[1] + '"></div>',
 						messageContent: '<a href="' + message + '">' + message + '</a>' +
 										'<div class="plyr__video-embed" id="player">' +
 										'<iframe onload="hideRelatedVideoSection(this)" src="https://www.youtube.com/embed/' +
@@ -1378,6 +1375,23 @@ function renderMessage(fromClient, fromClientID, fromClientUID, message, isPoke)
 							}
 						}
 					});
+				} else if (message.includes('youtube.') || message.includes('youtu.')) { // Youtube link
+					isPlyrPlayer = true;
+					templateID = '#message-media-response-template';
+					template = Handlebars.compile($(templateID).html());
+					context = {
+						sender: fromClient,
+						senderUID: fromClientUID,
+						messageContent: '<a href="' + message + '">' + message + '</a>' +
+										'<div class="plyr__video-embed" id="player">' +
+										'<iframe onload="hideRelatedVideoSection(this)" src="https://www.youtube.com/embed/' +
+										message.split('v=')[1] +
+										'?origin=https://plyr.io&amp;iv_load_policy=3&amp;modestbranding=1&amp;playsinline=1&amp;showinfo=0&amp;rel=0&amp;enablejsapi=1"' +
+										' allowfullscreen allowtransparency allow="autoplay"></iframe>' +
+										'</div>',
+						time: chat.getCurrentTime(),
+						category: "video url plyr youtube" + categoryExtension
+					};
 				} else if (ImgFormats.includes(message.split('.').slice(-1)[0])) { // is a direct url to an img
 					templateID = '#message-media-response-template';
 					template = Handlebars.compile($(templateID).html());
