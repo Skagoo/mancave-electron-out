@@ -392,6 +392,11 @@ function registerKeyboardShortcuts() {
 
       // Open the DevTools.
       mainWin.webContents.openDevTools();
+
+      if (videoConferenceWin != null) {
+        videoConferenceWin.webContents.openDevTools();
+      }
+
     })
   
     if (ret && globalShortcut.isRegistered(acceleratorOpenDevTools)) {

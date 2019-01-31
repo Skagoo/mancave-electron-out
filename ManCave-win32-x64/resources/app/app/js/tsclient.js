@@ -29,7 +29,7 @@ var testConnectionInterval;
 
 let lastWhisperClientID;
 
-let ImgFormats = ['jpg', 'png', 'bmp', 'jpeg', 'jif', 'jiff'];
+let ImgFormats = ['jpg', 'png', 'bmp', 'jpeg', 'jif', 'jiff', 'gif'];
 
 const Tray = remote.Tray;
 let tray = new Tray(__dirname + `\\img\\tray\\icon.ico`);
