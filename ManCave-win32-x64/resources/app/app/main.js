@@ -199,7 +199,7 @@ function createVideoConferenceWindow () {
   })
 
   // and load the index.html of the app.
-  videoConferenceWin.loadFile('app/video-conference.html')
+  videoConferenceWin.loadFile('app/video-conf-jitsi.html')
 
   // Open the DevTools.
   // videoConferenceWin.webContents.openDevTools();
