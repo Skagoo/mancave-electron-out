@@ -6,7 +6,7 @@ iframe.onload = () => {
         try {
             if (frames[0].document.getElementsByClassName('button-group-center').length) {
                 frames[0].document.getElementsByClassName('icon-microphone')[0].click();
-                // document.getElementsByClassName('bottom-left-button-group')[0].style.cssText = 'visibility: hidden !important;';
+                frames[0].document.getElementsByClassName('icon-tiles-many')[0].click();
                 clearInterval(checkExist03);
             }
         } catch (err) { }
@@ -14,6 +14,7 @@ iframe.onload = () => {
     }, 50);
 
     var styleElem = document.createElement('style');
-    styleElem.innerHTML = '.new-toolbox {visibility: hidden !important;} .watermark {visibility: hidden !important;} .filmstrip__videos {background: #181818 !important} .videocontainer__background { background: rgba(18, 18, 18, 0.5) !important;}';
+    //.new-toolbox {visibility: hidden !important;}
+    styleElem.innerHTML = '.watermark {visibility: hidden !important;} .filmstrip__videos {background: #181818 !important} .videocontainer__background { background: rgba(18, 18, 18, 0.5) !important;}';
     frames[0].document.head.appendChild(styleElem);
 }
