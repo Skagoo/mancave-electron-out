@@ -517,7 +517,7 @@ function connect(channel) {
 		// Get the current window
 		var mainWin = remote.getCurrentWindow();
 
-		if (settings.connectionHostname_value.get() != null) {
+		if (settings.connectionHostname_value.get() != null && settings.applicationCurrentVersion_value.get() != '' && settings.applicationCurrentVersion_value.get() == settings.applicationRequiredVersion_value.get()) {
 			/**
 			 * Connect to server
 			 */
@@ -948,10 +948,17 @@ function channelNav_addSpacer(channelID, title) {
 }
 
 function channelNav_addChannel(channelID, channelName, spacer) {
-	var spacerNoSpace = spacer.replace(/[\s\&\:]/g, "");
-	var navSpacer = $('#' + spacerNoSpace);
 	var elem = '<a class="navigation__list__item channel" id="' + channelName.replace(/[\s\&\:]/g, "") + '_' + channelID + '" ondblclick="joinChannel(' + channelID + ')"><span>' + channelName + '</span></a>';
-	navSpacer.append(elem);
+
+	if  (spacer != null) {
+		var spacerNoSpace = spacer.replace(/[\s\&\:]/g, "");
+		var navSpacer = $('#' + spacerNoSpace);
+		navSpacer.append(elem);
+	}
+	else {
+		var nav = $('.navigation');
+		nav.append(elem);
+	}
 }
 
 function channelNav_addClient(clientID, nickname, channelName, channelID) {

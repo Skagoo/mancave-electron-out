@@ -20,6 +20,10 @@ var settingsPath_value = {
 // ========================== KEYS ============================
 // ============================================================
 
+// Application
+const applicationRequiredVersion = 'application.requiredVersion';
+const applicationCurrentVersion = 'application.currentVersion';
+
 // Connection
 const connectionIdentity = 'connection.identity';
 const connectionHostname = 'connection.hostname';
@@ -59,6 +63,34 @@ const chatNSFWVisibility = 'chat.NSFWVisibility';
 // ============================================================
 // ========================= VALUES ===========================
 // ============================================================
+var applicationRequiredVersion_value = {
+    get: function() {
+        if (!electronSettings.has(applicationRequiredVersion)) {
+            // return default value
+            return '';
+        }
+        return electronSettings.get(applicationRequiredVersion);
+    },
+    set: function(val) {
+        // Save the value
+        electronSettings.set(applicationRequiredVersion, val);
+    }
+}
+
+var applicationCurrentVersion_value = {
+    get: function() {
+        if (!electronSettings.has(applicationCurrentVersion)) {
+            // return default value
+            return '';
+        }
+        return electronSettings.get(applicationCurrentVersion);
+    },
+    set: function(val) {
+        // Save the value
+        electronSettings.set(applicationCurrentVersion, val);
+    }
+}
+
 var connectionIdentity_value = {
     get: function() {
         if (!electronSettings.has(connectionIdentity)) {
@@ -407,6 +439,8 @@ var chatNSFWVisibility_value = {
 // Export values
 module.exports = {
     settingsPath_value: settingsPath_value,
+    applicationRequiredVersion_value : applicationRequiredVersion_value,
+    applicationCurrentVersion_value : applicationCurrentVersion_value,
     connectionIdentity_value : connectionIdentity_value,
     connectionHostname_value : connectionHostname_value,
     connectionPort_value : connectionPort_value,
