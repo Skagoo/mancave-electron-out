@@ -42,6 +42,10 @@
         window.on('unmaximize', toggleMaxRestoreButtons);
 
         closeButton.addEventListener("click", event => {
+            // Get the name of the client
+		    var nickname = ts3client.getClientVariableAsString(schID, selfClientID, ts3client.ClientProperties.NICKNAME);
+            sendSilentMessage(nickname + " connected")
+            
             // Close the teamspeak connection
             ts3client.stopConnection(schID);
 

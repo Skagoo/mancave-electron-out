@@ -1,12 +1,12 @@
 {
   "name": "mancave-electron",
   "productName": "ManCave",
-  "version": "1.6.1",
+  "version": "1.6.2",
   "description": "VOIP client",
   "main": "app/main.js",
   "scripts": {
     "start": "electron .",
-    "package-win32": "electron-packager . --icon=./res/icon.ico"
+    "package-win32": "electron-packager . --icon=./res/icon.ico --ignore=/.gitignore --overwrite"
   },
   "keywords": [],
   "author": "Sacha Van den Wyngaert",

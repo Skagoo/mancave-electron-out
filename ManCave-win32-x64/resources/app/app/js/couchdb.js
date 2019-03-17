@@ -4,12 +4,12 @@ const databaseName = 'mancave-electron';
 
 // node-couchdb instance talking to external service
 const couch = new NodeCouchDb({
-    host: 'skagoo.com',
+    host: 'couchdb-59d6c5.smileupps.com',
     protocol: 'https',
     port: 6984,
     auth: {
         user: 'admin',
-        pass: 'couchdb759153'
+        pass: 'f80b8957004d'
     }
 });
 

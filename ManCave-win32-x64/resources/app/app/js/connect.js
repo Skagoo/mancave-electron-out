@@ -55,8 +55,8 @@ let settings = require('./js/settings.js');
             settings.connectionDefaultChannelPassword_value.set(defaultChannelPassword);
             settings.connectionServerPassword_value.set(serverPassword);
 
-            settings.applicationRequiredVersion_value.set('1.6.1');
-            settings.applicationCurrentVersion_value.set('1.6.1');
+            settings.applicationRequiredVersion_value.set('1.6.2');
+            settings.applicationCurrentVersion_value.set('1.6.2');
 
             let window = remote.getCurrentWindow();
             window.close();

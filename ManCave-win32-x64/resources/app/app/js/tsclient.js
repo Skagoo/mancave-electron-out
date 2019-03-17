@@ -17,7 +17,7 @@ let settings = require('./js/settings.js');
 global.soundpack = settings.playbackSoundpack_value.get();
 
 var schID;
-var selfClientID;
+global.selfClientID;
 var selfClientUID;
 var lastChannel;
 
@@ -82,7 +82,12 @@ ts3client.on('onConnectStatusChangeEvent', function (schID, status, errno) {
 				 }
 			})
 		}
-		setupChannelNav();	
+		setupChannelNav();
+		
+		// Get the name of the client
+		var nickname = ts3client.getClientVariableAsString(schID, selfClientID, ts3client.ClientProperties.NICKNAME);
+
+		sendSilentMessage(nickname + " connected")
 	}
 
 	if (errno) {
@@ -367,11 +372,19 @@ ts3client.on('onTextMessageEvent', function (schID, targetMode, toID, fromID, fr
 
 	if (targetMode == ts3client.TextMessageTargetMode.SERVER) {
 		isPoke = false;
-		renderMessage(fromName, fromID, fromUID, message, isPoke).then(function whenOk(response) {
-			if (fromID == selfClientID) { // Message was sent by self
+		isSilent = message.includes('[silent]');
+		console.log('isSilent: ' + isSilent)
+
+		if (isSilent) {
+			message = message.replace('[silent]', '')
+		}
+
+		renderMessage(fromName, fromID, fromUID, message, isPoke, isSilent).then(function whenOk(response) {
+			if (fromID == selfClientID && !isSilent) { // Message was sent by self
 				// Store in DB
 				addChatMessage(response);
-			} else {
+			}
+			else if (!isSilent) {
 				// Play soundfile
 				ts3client.playWaveFile(schID, __dirname + `\\sound\\${soundpack}\\chat_message_inbound.wav`);
 
@@ -409,6 +422,9 @@ ts3client.on('onTextMessageEvent', function (schID, targetMode, toID, fromID, fr
 		})
 	}
 	else if (targetMode == ts3client.TextMessageTargetMode.CLIENT) {
+		isPoke = true;
+		isSilent = message.includes('[silent]');
+
 		if (fromID == selfClientID) { // Message was sent by self
 			// Dont store in DB
 		} else {
@@ -421,10 +437,10 @@ ts3client.on('onTextMessageEvent', function (schID, targetMode, toID, fromID, fr
 			alert(fromName + ' poked you:\n' + message);
 		}
 
-		isPoke = true;
+		
 
 		// Render messsage in chat as well
-		renderMessage(fromName, fromID, fromUID, message, isPoke).then(function whenOk(response) {
+		renderMessage(fromName, fromID, fromUID, message, isPoke, isSilent).then(function whenOk(response) {
 			// Enable imageViewer
 			var viewer = ImageViewer();
 			$('.gallery-items').click(function () {
@@ -521,7 +537,6 @@ function connect(channel) {
 			/**
 			 * Connect to server
 			 */
-			// ts3client.startConnection(schID, ident, '51.254.24.100', 12435, 'ElectronSkagoo', ['Guest Channel'], '', '63df0-dc283-245ec-253d5-f6110-7b384');
 			var channelToConnect;
 			if (channel != null) {
 				channelToConnect = [channel];
@@ -754,6 +769,11 @@ function setPreprocessorEchoCanceling(value) {
 	settings.preprocessorEchoCanceling_value.set(value);
 
 	ts3client.logMessage('echo_canceling: ' + value);
+}
+
+function sendSilentMessage(message) {
+	message = '[silent]' + message;
+	ts3client.requestSendServerTextMsg(schID, message);
 }
 
 function sendMessage(message) {
@@ -1225,7 +1245,7 @@ function toggleMuteInput () {
 	ts3client.flushClientSelfUpdates(schID);
 }
 
-function renderMessage(fromClient, fromClientID, fromClientUID, message, isPoke) {
+function renderMessage(fromClient, fromClientID, fromClientUID, message, isPoke, isSilent) {
 	return new Promise(function (resolve, reject) {
 		var template;
 		var templateID;
@@ -1235,7 +1255,17 @@ function renderMessage(fromClient, fromClientID, fromClientUID, message, isPoke)
 
 		var isPlyrPlayer = false;
 
-		if (fromClientID == selfClientID) { // Message is from self
+		if (isSilent) { // Silent server message
+			templateID = '#message-silent-response-template';
+				template = Handlebars.compile($(templateID).html());
+				context = {
+					messageContent: message,
+					time: chat.getCurrentTime(),
+					category: "text"
+				};
+		}
+
+		else if (fromClientID == selfClientID) { // Message is from self
 			if (isPoke) {
 				categoryExtension = ' poke-self';
 			}
