@@ -73,6 +73,10 @@ ts3client.on('onConnectStatusChangeEvent', function (schID, status, errno) {
 		selfClientUID = ts3client.getClientVariableAsString(schID, selfClientID, ts3client.ClientProperties.UNIQUE_IDENTIFIER);
 		global_selfClientUID = selfClientUID;
 
+		// Debug;
+		var uid = ts3client.getClientVariableAsString(schID, selfClientID, ts3client.ClientProperties.UNIQUE_IDENTIFIER);
+		console.log('Self UID: ' + selfClientUID);
+
 		// Setup channelNav
 		function setupChannelNav() {
 			$.ajax({
@@ -149,6 +153,10 @@ function addClientsToChannelNav() {
 		var nickname = ts3client.getClientVariableAsString(schID, client, ts3client.ClientProperties.NICKNAME);
 		// Get the name of the client's channel
 		var channelName = ts3client.getChannelVariableAsString(schID, channel, ts3client.ChannelProperties.NAME);
+
+		// Debug;
+		var uid = ts3client.getClientVariableAsString(schID, client, ts3client.ClientProperties.UNIQUE_IDENTIFIER);
+		console.log(nickname + ' ' + uid);
 
 		// Get talk status
 		var isTalking = (ts3client.getClientVariableAsString(schID, client, ts3client.ClientProperties.FLAG_TALKING) == ts3client.TalkStatus.TALKING);

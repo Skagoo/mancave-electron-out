@@ -106,9 +106,10 @@ let mainWin;
 app.on('ready', () => {
   log.info('App ready');
   // Create the main window
-  createMainWindow();
+  // createMainWindow();
+  createVideoConferenceWindow()
 
-  registerKeyboardShortcuts();
+  // registerKeyboardShortcuts();
 })
 
 // Quit when all windows are closed.
@@ -124,7 +125,8 @@ app.on('activate', () => {
   // On macOS it's common to re-create a window in the app when the
   // dock icon is clicked and there are no other windows open.
   if (mainWin === null) {
-    createMainWindow()
+    // createMainWindow()
+    createVideoConferenceWindow()
   }
 })
 
